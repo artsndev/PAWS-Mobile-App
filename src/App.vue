@@ -8,10 +8,10 @@
 
 <script setup>
 import { onMounted, onUnmounted } from 'vue';
-// import useStatusBar from './composables/statusbar';
+import useStatusBar from './composables/statusBar';
 
 // eslint-disable-next-line no-unused-vars
-// const { setStatusBarTransparent } = useStatusBar();
+const { setStatusBarTransparent } = useStatusBar();
 
 onMounted(() => {
   let elHtml = document.getElementsByTagName('html')[0];
