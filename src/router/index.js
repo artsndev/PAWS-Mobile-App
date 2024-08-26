@@ -1,36 +1,54 @@
+import { createRouter, createWebHistory } from 'vue-router'
 
-/**
- * router/index.ts
- *
- * Automatic routes for `./src/pages/*.vue`
- */
-
-// Composables
-import { createRouter, createWebHistory } from 'vue-router/auto'
-import { routes } from 'vue-router/auto-routes'
-
+// Create your Client-Side Routing here
+const routes = [
+  {
+    path: '/',
+    redirect: {
+      name: 'Home',
+    }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../components/auth/Login.vue'),
+    meta: {
+      user: true,
+    }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('../components/auth/Register.vue'),
+    meta: {
+      user: true,
+    }
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: () => import('../components/Home.vue'),
+    meta: {
+      requiresUserAuth: true,
+    }
+  },
+]
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
 
-// Workaround for https://github.com/vitejs/vite/issues/11804
-router.onError((err, to) => {
-  if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {
-    if (!localStorage.getItem('vuetify:dynamic-reload')) {
-      console.log('Reloading page to fix dynamic import error')
-      localStorage.setItem('vuetify:dynamic-reload', 'true')
-      location.assign(to.fullPath)
-    } else {
-      console.error('Dynamic import error, reloading page did not fix it', err)
-    }
+// User Auth Middleware
+router.beforeEach((to, from, next) => {
+  const requiresUserAuth = to.matched.some(record => record.meta.requiresUserAuth);
+  const user = to.matched.some(record => record.meta.user);
+  const isUserLoggedIn = localStorage.getItem('userToken');
+  if (requiresUserAuth && !isUserLoggedIn) {
+      next({ name: 'Login' });
+  } else if (user && isUserLoggedIn) {
+      next({ name: 'Home' });
   } else {
-    console.error(err)
+      next();
   }
-})
-
-router.isReady().then(() => {
-  localStorage.removeItem('vuetify:dynamic-reload')
-})
-
+});
 export default router
