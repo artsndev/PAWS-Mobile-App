@@ -12,25 +12,25 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('../components/auth/Login.vue'),
-    meta: {
-      user: true,
-    }
+    // meta: {
+    //   user: true,
+    // }
   },
   {
     path: '/register',
     name: 'Register',
     component: () => import('../components/auth/Register.vue'),
-    meta: {
-      user: true,
-    }
+    // meta: {
+    //   user: true,
+    // }
   },
   {
     path: '/home',
     name: 'Home',
     component: () => import('../components/Home.vue'),
-    meta: {
-      requiresUserAuth: true,
-    }
+    // meta: {
+    //   requiresUserAuth: true,
+    // }
   },
 ]
 const router = createRouter({
