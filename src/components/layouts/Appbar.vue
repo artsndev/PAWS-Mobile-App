@@ -5,7 +5,7 @@
     <template v-slot:prepend>
       <v-app-bar-nav-icon size="30" :ripple="false" @touchstart.prevent="toggleMenu" @mousedown.prevent="toggleMenu" @click="toggleMenu"></v-app-bar-nav-icon>
     </template>
-    <v-app-bar-title>Application Bar</v-app-bar-title>
+    <v-app-bar-title>Dashboard</v-app-bar-title>
   </v-app-bar>
 
   <v-navigation-drawer v-model="drawer" flat color="deep-purple-darken-1">
@@ -48,16 +48,10 @@ const toggleMenu = () => {
 }
 
 const navDrawitems = ref([
-  { icon: 'mdi-account-outline', text: 'Home', routeName: 'Home' },
-  { icon: 'mdi-account-outline', text: 'Home', routeName: 'Home' },
-  { icon: 'mdi-account-outline', text: 'Home', routeName: 'Home' },
-  { icon: 'mdi-account-outline', text: 'Home', routeName: 'Home' },
-  { icon: 'mdi-account-outline', text: 'Home', routeName: 'Home' },
-
-//   { icon: 'mdi-bullhorn-variant-outline', text: 'Announcement', routeName: 'Announcement'},
-//   { icon: 'mdi-doctor', text: 'Doctor', routeName: 'Doctor'},
-//   { icon: 'mdi-message-text-outline', text: 'Session', routeName: 'Session'},
-//   { icon: 'mdi-cog-outline', text: 'Settings',},
+  { icon: 'mdi-chart-donut', text: 'Dashboard', routeName: 'Home' },
+  { icon: 'mdi-clipboard-text-multiple-outline', text: 'Appointments', routeName: 'Appointment'},
+  { icon: 'mdi-account-multiple-outline', text: 'Users', routeName: 'User'},
+  { icon: 'mdi-clipboard-check-multiple-outline', text: 'Queued', routeName: 'Queue'},
 ]);
 
 </script>

@@ -32,6 +32,21 @@ const routes = [
     //   requiresUserAuth: true,
     // }
   },
+  {
+    path: '/appointments',
+    name: 'Appointment',
+    component: () => import('../components/Appointment.vue'),
+  },
+  {
+      path: '/users',
+      name: 'User',
+      component: () => import('../components/User.vue'),
+  },
+  {
+      path: '/queues',
+      name: 'Queue',
+      component: () => import('../components/Queue.vue'),
+  },
 ]
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
