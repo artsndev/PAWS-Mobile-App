@@ -31,7 +31,7 @@
     </v-list>
     <template v-slot:append>
       <div class="text-center mb-2">
-        <p class="text-grey fs-14">@QuirkyQuarks Squadrons</p>
+        <!-- <p class="text-grey fs-14">@QuirkyQuarks Squadrons</p> -->
         <p class="text-grey mb-2 fs-14">© 2024 All rights reserved.</p>
       </div>
     </template>
