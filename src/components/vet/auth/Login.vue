@@ -77,7 +77,7 @@ const timer = ref(null)
 const login = async () => {
   try {
     isLoading.value = true;
-    const response = await axios.post(BASE_URL + '/login', form);
+    const response = await axios.post(BASE_URL + '/vet/login', form);
 
     const clearValidationErrors = () => {
       email_error.value = '';
@@ -109,7 +109,7 @@ const login = async () => {
       }, 10000);
     }
     if(response.data.success){
-      localStorage.setItem('userToken', response.data.data.userToken);
+      localStorage.setItem('vetToken', response.data.data.vetToken);
       router.push('/announcement');
     } else {
       if (response.data.errors) {

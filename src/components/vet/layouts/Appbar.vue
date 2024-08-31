@@ -14,7 +14,7 @@
         <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
       </v-avatar>
       <v-list>
-        <v-list-item subtitle="alfhaigarusman@gmail.com" title="Al-Fhaigar J. Usman"></v-list-item>
+        <v-list-item :subtitle="email" :title="name"></v-list-item>
       </v-list>
     </div>
     <v-list density="compact" nav class="mt-3">

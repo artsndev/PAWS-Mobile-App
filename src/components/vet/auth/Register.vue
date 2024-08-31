@@ -94,7 +94,7 @@ const register = async () => {
         formData.append('phone_number', form.phone_number);
         formData.append('password', form.password);
         formData.append('password_confirmation', form.password_confirmation);
-    const response = await axios.post(BASE_URL + '/register', formData);
+    const response = await axios.post(BASE_URL + '/vet/register', formData);
 
     const clearValidationErrors = () => {
       name_error.value = '';
@@ -136,7 +136,7 @@ const register = async () => {
       }, 10000);
     }
     if(response.data.success){
-      localStorage.setItem('userToken', response.data.data.userToken);
+      localStorage.setItem('vetToken', response.data.data.vetToken);
       router.push('/announcement');
     } else {
       if (response.data.errors) {
