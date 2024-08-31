@@ -12,25 +12,25 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('../components/vet/auth/Login.vue'),
-    // meta: {
-    //   user: true,
-    // }
+    meta: {
+      vet: true,
+    }
   },
   {
     path: '/register',
     name: 'Register',
     component: () => import('../components/vet/auth/Register.vue'),
-    // meta: {
-    //   user: true,
-    // }
+    meta: {
+      vet: true,
+    }
   },
   {
     path: '/home',
     name: 'Home',
     component: () => import('../components/vet/Home.vue'),
-    // meta: {
-    //   requiresUserAuth: true,
-    // }
+    meta: {
+      requiresVetAuth: true,
+    }
   },
   {
     path: '/appointments',

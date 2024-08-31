@@ -137,7 +137,7 @@ const register = async () => {
     }
     if(response.data.success){
       localStorage.setItem('vetToken', response.data.data.vetToken);
-      router.push('/announcement');
+      router.push('/home');
     } else {
       if (response.data.errors) {
         setValidationError();
