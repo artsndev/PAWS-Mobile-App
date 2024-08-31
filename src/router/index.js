@@ -11,26 +11,41 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../components/auth/Login.vue'),
+    component: () => import('../components/vet/auth/Login.vue'),
     meta: {
-      user: true,
+      vet: true,
     }
   },
   {
     path: '/register',
     name: 'Register',
-    component: () => import('../components/auth/Register.vue'),
+    component: () => import('../components/vet/auth/Register.vue'),
     meta: {
-      user: true,
+      vet: true,
     }
   },
   {
     path: '/home',
     name: 'Home',
-    component: () => import('../components/Home.vue'),
+    component: () => import('../components/vet/Home.vue'),
     meta: {
-      requiresUserAuth: true,
+      requiresVetAuth: true,
     }
+  },
+  {
+    path: '/appointments',
+    name: 'Appointment',
+    component: () => import('../components/vet/Appointment.vue'),
+  },
+  {
+      path: '/users',
+      name: 'User',
+      component: () => import('../components/vet/User.vue'),
+  },
+  {
+      path: '/queues',
+      name: 'Queue',
+      component: () => import('../components/vet/Queue.vue'),
   },
 ]
 const router = createRouter({
@@ -38,14 +53,14 @@ const router = createRouter({
   routes,
 })
 
-// User Auth Middleware
+// Vet Auth Middleware
 router.beforeEach((to, from, next) => {
-  const requiresUserAuth = to.matched.some(record => record.meta.requiresUserAuth);
-  const user = to.matched.some(record => record.meta.user);
-  const isUserLoggedIn = localStorage.getItem('userToken');
-  if (requiresUserAuth && !isUserLoggedIn) {
+  const requiresVetAuth = to.matched.some(record => record.meta.requiresVetAuth);
+  const vet = to.matched.some(record => record.meta.vet);
+  const isVetLoggedIn = localStorage.getItem('vetToken');
+  if (requiresVetAuth && !isVetLoggedIn) {
       next({ name: 'Login' });
-  } else if (user && isUserLoggedIn) {
+  } else if (vet && isVetLoggedIn) {
       next({ name: 'Home' });
   } else {
       next();
