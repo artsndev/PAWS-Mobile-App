@@ -3,9 +3,9 @@
 <template>
   <v-app-bar flat color="deep-purple-darken-1">
     <template v-slot:prepend>
-      <v-app-bar-nav-icon size="30" :ripple="false" @touchstart.prevent="toggleMenu" @mousedown.prevent="toggleMenu" @click="toggleMenu"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon size="33" class="ms-2" @click="toggleMenu"></v-app-bar-nav-icon>
     </template>
-    <v-app-bar-title>Dashboard</v-app-bar-title>
+    <v-app-bar-title>My Dashboard</v-app-bar-title>
   </v-app-bar>
 
   <v-navigation-drawer v-model="drawer" flat color="deep-purple-darken-1">
@@ -40,7 +40,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { BASE_URL } from '@/server';
+import axios from 'axios';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const drawer = ref(false);
 const toggleMenu = () => {
@@ -53,5 +56,38 @@ const navDrawitems = ref([
   { icon: 'mdi-account-multiple-outline', text: 'Users', routeName: 'User'},
   { icon: 'mdi-clipboard-check-multiple-outline', text: 'Queued', routeName: 'Queue'},
 ]);
+
+const router = useRouter();
+
+const name = ref('');
+const email = ref('');
+
+const loadUser = async () => {
+  try {
+    const token = localStorage.getItem('vetToken')
+    const response = await axios.get(BASE_URL + '/vet/data', {
+      headers : {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    name.value = response.data.name
+    email.value = response.data.email
+
+  } catch (error) {
+    if (error.response.status === 401) {
+      localStorage.removeItem('vetToken');
+      setTimeout(() => {
+        location.reload()
+        router.push({
+          name: 'Login'
+        })
+      }, 3000)
+    }
+  }
+}
+
+onMounted(() => {
+  loadUser()
+})
 
 </script>
