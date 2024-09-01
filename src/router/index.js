@@ -9,43 +9,70 @@ const routes = [
     }
   },
   {
-    path: '/login',
-    name: 'Login',
+    path: '/vet/login',
+    name: 'Vet Login',
     component: () => import('../components/vet/auth/Login.vue'),
     meta: {
       vet: true,
     }
   },
   {
-    path: '/register',
-    name: 'Register',
+    path: '/vet/register',
+    name: 'Vet Register',
     component: () => import('../components/vet/auth/Register.vue'),
     meta: {
       vet: true,
     }
   },
   {
-    path: '/home',
-    name: 'Home',
-    component: () => import('../components/vet/Home.vue'),
+    path: '/vet/dashboard',
+    name: 'Vet Dashboard',
+    component: () => import('../components/vet/Dashboard.vue'),
     meta: {
       requiresVetAuth: true,
     }
   },
   {
-    path: '/appointments',
-    name: 'Appointment',
+    path: '/vet/appointments',
+    name: 'Vet Appointment',
     component: () => import('../components/vet/Appointment.vue'),
+    meta: {
+      requiresVetAuth: true,
+    }
   },
   {
-      path: '/users',
-      name: 'User',
+      path: '/vet/users',
+      name: 'Vet User',
       component: () => import('../components/vet/User.vue'),
+      meta: {
+        requiresVetAuth: true,
+      }
   },
   {
-      path: '/queues',
-      name: 'Queue',
+      path: '/vet/queues',
+      name: 'Vet Queue',
       component: () => import('../components/vet/Queue.vue'),
+      meta: {
+        requiresVetAuth: true,
+      }
+  },
+
+  // User Web Routes
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../components/user/auth/Login.vue'),
+    meta: {
+      user: true,
+    }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('../components/user/auth/Register.vue'),
+    meta: {
+      user: true,
+    }
   },
 ]
 const router = createRouter({
@@ -59,8 +86,22 @@ router.beforeEach((to, from, next) => {
   const vet = to.matched.some(record => record.meta.vet);
   const isVetLoggedIn = localStorage.getItem('vetToken');
   if (requiresVetAuth && !isVetLoggedIn) {
-      next({ name: 'Login' });
+      next({ name: 'Vet Login' });
   } else if (vet && isVetLoggedIn) {
+      next({ name: 'Vet Dashboard' });
+  } else {
+      next();
+  }
+});
+
+// User Auth Middleware
+router.beforeEach((to, from, next) => {
+  const requiresUserAuth = to.matched.some(record => record.meta.requiresUserAuth);
+  const user = to.matched.some(record => record.meta.user);
+  const isUserLoggedIn = localStorage.getItem('userToken');
+  if (requiresUserAuth && !isUserLoggedIn) {
+      next({ name: 'Login' });
+  } else if (user && isUserLoggedIn) {
       next({ name: 'Home' });
   } else {
       next();

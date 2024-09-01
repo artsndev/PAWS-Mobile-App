@@ -14,7 +14,7 @@
     <v-row align="center" justify="center" class=" px-2 mt-5 mb-16" >
       <v-col cols="12" sm="8" md="8" lg="4" xl="3" xxl="4">
         <div class="mb-9" color="primary">
-          <h2 class="font-weight-bold mt-3 text-center">Welcome Back vet!</h2>
+          <h2 class="font-weight-bold mt-3 text-center">Welcome Back!</h2>
           <p class="mt-2 mb-6 text-center">Glad to see you again 🥰</p>
           <v-alert v-if="error" icon="mdi-alert"  variant="tonal" class="mb-5"  color="red-darken-4">
             {{ error }}
@@ -110,7 +110,7 @@ const login = async () => {
     }
     if(response.data.success){
       localStorage.setItem('vetToken', response.data.data.vetToken);
-      router.push('/vet/dashboard');
+      router.push('/home');
     } else {
       if (response.data.errors) {
         setValidationError();

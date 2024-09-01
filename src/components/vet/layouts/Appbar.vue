@@ -28,6 +28,7 @@
             </router-link>
         </v-list-item>
         <v-divider class="mt-5"></v-divider>
+        <v-list-item prepend-icon="mdi-location-exit" title="Sign out" value="logout" class="ms-1 mt-1 fs-5" @click="logout"></v-list-item>
     </v-list>
     <template v-slot:append>
       <div class="text-center mb-2">
@@ -51,10 +52,10 @@ const toggleMenu = () => {
 }
 
 const navDrawitems = ref([
-  { icon: 'mdi-chart-donut', text: 'Dashboard', routeName: 'Home' },
-  { icon: 'mdi-clipboard-text-multiple-outline', text: 'Appointments', routeName: 'Appointment'},
-  { icon: 'mdi-account-multiple-outline', text: 'Users', routeName: 'User'},
-  { icon: 'mdi-clipboard-check-multiple-outline', text: 'Queued', routeName: 'Queue'},
+  { icon: 'mdi-chart-donut', text: 'Dashboard', routeName: 'Vet Dashboard' },
+  { icon: 'mdi-clipboard-text-multiple-outline', text: 'Appointments', routeName: 'Vet Appointment'},
+  { icon: 'mdi-account-multiple-outline', text: 'Users', routeName: 'Vet User'},
+  { icon: 'mdi-clipboard-check-multiple-outline', text: 'Queued', routeName: 'Vet Queue'},
 ]);
 
 const router = useRouter();
@@ -85,6 +86,20 @@ const loadUser = async () => {
     }
   }
 }
+const logout = async () => {
+    try {
+        const token = localStorage.getItem('vetToken');
+        await axios.post(BASE_URL + '/vet/logout', null, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        });
+        localStorage.removeItem('vetToken');
+        router.push({ name: 'Login' });
+    } catch (error) {
+        console.error(error);
+    }
+};
 
 onMounted(() => {
   loadUser()
