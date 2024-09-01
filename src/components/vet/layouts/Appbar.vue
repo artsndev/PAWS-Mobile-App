@@ -72,7 +72,7 @@ const loadUser = async () => {
     })
     name.value = response.data.name
     email.value = response.data.email
-
+    console.log(name.value)
   } catch (error) {
     if (error.response.status === 401) {
       localStorage.removeItem('vetToken');
