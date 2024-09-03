@@ -74,6 +74,22 @@ const routes = [
       user: true,
     }
   },
+  {
+    path: '/home',
+    name: 'Home',
+    component: () => import('../components/user/Dashboard.vue'),
+    meta: {
+      requiresUserAuth: true,
+    }
+  },
+  {
+    path: '/pet',
+    name: 'Pet',
+    component: () => import('../components/user/Pet.vue'),
+    meta: {
+      requiresUserAuth: true,
+    }
+  },
 ]
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
