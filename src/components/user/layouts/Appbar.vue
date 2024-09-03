@@ -5,7 +5,7 @@
     <template v-slot:prepend>
       <v-app-bar-nav-icon size="33" class="ms-2" @click="toggleMenu"></v-app-bar-nav-icon>
     </template>
-    <v-app-bar-title>My Dashboard</v-app-bar-title>
+    <!-- <v-app-bar-title>My Dashboard</v-app-bar-title> -->
   </v-app-bar>
 
   <v-navigation-drawer v-model="drawer" flat color="deep-purple-darken-1">
@@ -52,10 +52,10 @@ const toggleMenu = () => {
 }
 
 const navDrawitems = ref([
-  { icon: 'mdi-chart-donut', text: 'Dashboard', routeName: 'Vet Dashboard' },
-  { icon: 'mdi-clipboard-text-multiple-outline', text: 'Appointments', routeName: 'Vet Appointment'},
-  { icon: 'mdi-account-multiple-outline', text: 'Users', routeName: 'Vet User'},
-  { icon: 'mdi-clipboard-check-multiple-outline', text: 'Queued', routeName: 'Vet Queue'},
+  { icon: 'mdi-chart-donut', text: 'Dashboard', routeName: 'Home' },
+  { icon: 'mdi-paw-outline', text: 'Pet', routeName: 'Pet'},
+  { icon: 'mdi-history', text: 'History', routeName: 'Vet User'},
+  { icon: 'mdi-account-outline', text: 'Profile', routeName: 'Vet Queue'},
 ]);
 
 const router = useRouter();
@@ -65,8 +65,8 @@ const email = ref('');
 
 const loadUser = async () => {
   try {
-    const token = localStorage.getItem('vetToken')
-    const response = await axios.get(BASE_URL + '/vet/data', {
+    const token = localStorage.getItem('userToken')
+    const response = await axios.get(BASE_URL + '/user/data', {
       headers : {
         Authorization: `Bearer ${token}`
       }
@@ -76,7 +76,7 @@ const loadUser = async () => {
     console.log(name.value)
   } catch (error) {
     if (error.response.status === 401) {
-      localStorage.removeItem('vetToken');
+      localStorage.removeItem('userToken');
       setTimeout(() => {
         location.reload()
         router.push({
@@ -88,13 +88,13 @@ const loadUser = async () => {
 }
 const logout = async () => {
     try {
-        const token = localStorage.getItem('vetToken');
-        await axios.post(BASE_URL + '/vet/logout', null, {
+        const token = localStorage.getItem('userToken');
+        await axios.post(BASE_URL + '/user/logout', null, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
         });
-        localStorage.removeItem('vetToken');
+        localStorage.removeItem('userToken');
         router.push({ name: 'Login' });
     } catch (error) {
         console.error(error);
