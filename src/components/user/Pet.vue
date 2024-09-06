@@ -1,9 +1,68 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <Appbar/>
-  <h1>This is pet profiling page</h1>
+  <v-container>
+    <!-- <p class="mb-2 mx-2">Your Pets</p> -->
+    <v-card rounded="xl" elevation="4">
+      <v-card-title>Your Pet</v-card-title>
+      <v-container>
+        <v-row>
+          <v-col cols="6" v-for="(item, index) in data" :key="index">
+              <v-card rounded="xl" class="mt-n3 mb-1" elevation="3" >
+                  <v-row class="mx-1 mt-1">
+                      <v-col cols="8">
+                        <v-avatar size="50" class="mx-auto mb-3">
+                          <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
+                        </v-avatar>
+                      </v-col>
+                      <v-col cols="4" class="mt-n1 text-end">
+                          <v-btn icon="mdi-trash-can-outline" density="comfortable" variant="flat"></v-btn>
+                      </v-col>
+                  </v-row>
+                  <v-list lines="one">
+                      <v-list-item class="mt-n3 mb-1">
+                          <template v-slot:default>
+                              <v-list-item-content>
+                                  <v-list-item-title class="fs-26">{{ item.name }}</v-list-item-title>
+                                  <v-list-item-subtitle class="fs-16">{{ item.species }}</v-list-item-subtitle>
+                              </v-list-item-content>
+                          </template>
+                      </v-list-item>
+                  </v-list>
+                  <v-card-actions>
+                    <v-btn color="deep-purple-lighten-2" text="View Pet" block rounded="xl" variant="outlined"></v-btn>
+                  </v-card-actions>
+              </v-card>
+          </v-col>
+      </v-row>
+      </v-container>
+    </v-card>
+  </v-container>
 </template>
 
 <script setup>
+import axios from 'axios';
 import Appbar from './layouts/Appbar.vue'
+import { BASE_URL } from '@/server';
+import { onMounted, ref } from 'vue';
+
+const data = ref([])
+
+const fetchData = async () => {
+    try {
+        const token = localStorage.getItem('userToken')
+        const response = await axios.get(BASE_URL + '/user/pet', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        data.value = response.data.data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+onMounted(() => {
+    fetchData()
+})
 </script>
