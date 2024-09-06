@@ -41,6 +41,14 @@ const routes = [
     }
   },
   {
+    path: '/vet/schedules',
+    name: 'Vet Schedule',
+    component: () => import('../components/vet/Schedule.vue'),
+    meta: {
+      requiresVetAuth: true,
+    }
+  },
+  {
       path: '/vet/users',
       name: 'Vet User',
       component: () => import('../components/vet/User.vue'),

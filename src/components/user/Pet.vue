@@ -2,7 +2,6 @@
 <template>
   <Appbar/>
   <v-container>
-    <!-- <p class="mb-2 mx-2">Your Pets</p> -->
     <v-card rounded="xl" elevation="4">
       <v-card-title>Your Pet</v-card-title>
       <v-container>
@@ -34,7 +33,7 @@
                   </v-card-actions>
               </v-card>
           </v-col>
-      </v-row>
+        </v-row>
       </v-container>
     </v-card>
   </v-container>
