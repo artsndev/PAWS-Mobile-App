@@ -6,7 +6,7 @@
       <v-icon icon="mdi-chevron-right"></v-icon>
     </template>
   </v-breadcrumbs>
-  <v-row>
+  <v-row no-gutters>
     <v-col cols="12">
       <v-card-title>List of Users</v-card-title>
       <v-card-text>
@@ -65,24 +65,6 @@
                   </v-card>
                 </template>
               </v-dialog>
-              <!-- Edit Dialog -->
-              <!-- <v-dialog v-model="item.editDialog" max-width="500" persistent>
-                <template v-slot:activator="{ props }">
-                  <v-btn density="comfortable" icon @click="editItem(item)" variant="text" color="warning" v-bind="props">
-                    <v-icon>mdi-pencil</v-icon>
-                  </v-btn>
-                </template>
-                <template v-slot:default="{ isActive }">
-                  <v-card title="Edit Doctor's Profile" prepend-icon="mdi-calendar-edit">
-                    <v-card-text>{{ item.name }}</v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn text="Close Dialog" @click="isActive.value = false"></v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </template>
-              </v-dialog> -->
-              <!-- Delete Dialog -->
               <v-dialog v-model="item.deleteDialog" max-width="500" persistent>
                 <template v-slot:activator="{ props }">
                   <v-btn density="comfortable" icon @click="deleteItem(item)" variant="text" color="red-darken-3" v-bind="props">
