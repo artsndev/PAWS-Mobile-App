@@ -173,6 +173,7 @@ const editItem = (item) => {
 const viewItem = (item) => {
     console.log('View item:', item);
   // Implement view functionality here
+
 };
 
 const deleteItem = async (userId) => {
