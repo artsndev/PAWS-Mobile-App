@@ -5,7 +5,40 @@
     <template v-slot:prepend>
       <v-app-bar-nav-icon size="33" class="ms-2" @click="toggleMenu"></v-app-bar-nav-icon>
     </template>
-    <!-- <v-app-bar-title>My Dashboard</v-app-bar-title> -->
+    <v-dialog fullscreen transition="dialog-bottom-transition">
+      <template v-slot:activator="{ props: activatorProps }">
+        <v-btn v-bind="activatorProps" icon>
+          <v-icon>mdi-forum-plus-outline</v-icon>
+        </v-btn>
+      </template>
+      <template v-slot:default="{ isActive }">
+        <v-card>
+            <v-card-title class="d-flex justify-space-between align-center">
+              Appointment Form
+              <v-btn icon="mdi-close" variant="text" @click="isActive.value = false"></v-btn>
+            </v-card-title>
+            <v-card-text>
+              <div class=" mb-4">Invite collaborators to your network and grow your connections.</div>
+              <v-form @submit.prevent="createAppointment">
+
+              </v-form>
+            </v-card-text>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+
+        <v-btn
+          text="Close Dialog"
+          @click="isActive.value = false"
+        ></v-btn>
+      </v-card-actions>
+    </v-card>
+  </template>
+    </v-dialog>
+
+        <v-btn icon>
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
   </v-app-bar>
 
   <v-navigation-drawer v-model="drawer" flat color="deep-purple-darken-1">
@@ -100,8 +133,37 @@ const logout = async () => {
         console.error(error);
     }
 };
+const createAppointment = async () => {
+  try {
+    const token = localStorage.getItem('userToken');
+    const response = await axios.post(BASE_URL + '/user/appointment', formData, {
+      headers: {
+        Authorization: `Beare ${token}`
+      }
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
 
+const pet = ref([])
+
+const fetchPet = async () => {
+  try {
+    const token = localStorage.getItem('userToken')
+    const response = await axios.get(BASE_URL + '/user/appoinment/pet', {
+      headers: {
+        Authorization: `Beare ${token}`
+      }
+    })
+    pet.value = response.data
+    console.log(pet)
+  } catch (error) {
+    console.log(error)
+  }
+}
 onMounted(() => {
+  fetchPet()
   loadUser()
 })
 
