@@ -2,9 +2,7 @@
 <template>
   <Appbar/>
   <v-container>
-    <v-card rounded="xl" elevation="4">
       <v-card-title>Your Pet</v-card-title>
-      <v-container>
         <v-row>
           <v-col cols="6" v-for="(item, index) in data" :key="index">
               <v-card rounded="xl" class="mt-n3 mb-1" elevation="3" >
@@ -34,8 +32,6 @@
               </v-card>
           </v-col>
         </v-row>
-      </v-container>
-    </v-card>
   </v-container>
 </template>
 
