@@ -20,7 +20,11 @@
             <v-card-text>
               <div class=" mb-4">Invite collaborators to your network and grow your connections.</div>
               <v-form @submit.prevent="createAppointment">
-
+                <v-select class="mb-2" color="primary" density="compact" clearable chips label="Select a schedule" variant="outlined" >
+                  <option v-for="pet in petItem" :key="pet.id" :value="pet.id">
+                    {{ pet.name }}
+                  </option>
+                </v-select>
               </v-form>
             </v-card-text>
 
@@ -146,18 +150,19 @@ const createAppointment = async () => {
   }
 }
 
-const pet = ref([])
+const petItem = ref([])
+const selectedPet = ref(null);
 
 const fetchPet = async () => {
   try {
     const token = localStorage.getItem('userToken')
-    const response = await axios.get(BASE_URL + '/user/appoinment/pet', {
+    const response = await axios.get(BASE_URL + '/user/appointment/pet', {
       headers: {
-        Authorization: `Beare ${token}`
+        Authorization: `Bearer ${token}`
       }
     })
-    pet.value = response.data
-    console.log(pet)
+    petItem.value = response.data.data
+    console.log(petItem.value)
   } catch (error) {
     console.log(error)
   }
