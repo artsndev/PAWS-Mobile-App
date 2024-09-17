@@ -18,8 +18,8 @@
           </template>
           <template v-slot:item.schedule_time="{ item }">{{ formatDate(item.schedule_time) }}</template>
           <template v-slot:item.deleted_at="{ item }">
-                                <v-chip color="warning" v-if="item.deleted_at">Occupied</v-chip>
-                                <v-chip color="success" v-else>Available</v-chip>
+                                <v-chip color="warning" size="small" v-if="item.deleted_at">Occupied</v-chip>
+                                <v-chip color="success" size="small" v-else>Available</v-chip>
                             </template>
           <template v-slot:no-data>
             <v-alert type="info" :value="true">No data available</v-alert>

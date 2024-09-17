@@ -6,6 +6,29 @@
       <v-app-bar-nav-icon size="33" class="ms-2" @click="toggleMenu"></v-app-bar-nav-icon>
     </template>
     <v-app-bar-title>My Dashboard</v-app-bar-title>
+    <template v-slot:append>
+      <v-dialog max-width="500" persistent v-model="addScheduledialog">
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-btn icon="mdi-calendar-plus" v-bind="activatorProps"></v-btn>
+        </template>
+
+        <template v-slot:default="{ isActive }">
+          <v-card>
+            <v-toolbar color="transparent">
+              <v-toolbar-title>Add Schedule</v-toolbar-title>
+              <v-spacer></v-spacer>
+                <v-btn icon="mdi-close"  @click="isActive.value = false"></v-btn>
+            </v-toolbar>
+            <v-container>
+                <v-form @submit.prevent="addSchedule" class="mt-n2">
+                    <v-text-field :error-messages="schedule_time_error" type="datetime-local" v-model="form.schedule_time" density="compact" label="Schedule" variant="outlined"></v-text-field>
+                    <v-btn type="submit" color="primary" class="text-capitalize mt-1">Submit</v-btn>
+                </v-form>
+            </v-container>
+        </v-card>
+        </template>
+      </v-dialog>
+    </template>
   </v-app-bar>
 
   <v-navigation-drawer v-model="drawer" flat color="deep-purple-darken-1">
@@ -37,12 +60,16 @@
       </div>
     </template>
   </v-navigation-drawer>
-
+    <v-snackbar :timeout="2000" v-model="snackbar" color="success">
+      <v-icon icon="mdi-check" class="px-2"></v-icon>
+        {{ text }}
+    </v-snackbar>
 </template>
 
 <script setup>
 import { BASE_URL } from '@/server';
 import axios from 'axios';
+import { reactive } from 'vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -101,6 +128,55 @@ const logout = async () => {
         console.error(error);
     }
 };
+
+const snackbar = ref(false)
+const text = ref('')
+
+const schedule_time_error = ref('')
+
+const timer = ref(null)
+
+const form = reactive({
+    schedule_time: ''
+})
+
+const addScheduledialog = ref(false)
+
+const addSchedule = async () => {
+    try {
+        const formData = new FormData();
+        formData.append('schedule_time', form.schedule_time);
+        const token = localStorage.getItem('vetToken')
+        const response = await axios.post(BASE_URL + '/vet/schedule', formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+        })
+        const clearValidationError = () => {
+            schedule_time_error.value = ''
+        }
+        const setValidationError = () => {
+            clearValidationError()
+            timer.value = setTimeout(() => {
+                schedule_time_error.value = response.data.errors.schedule_time
+            }, 1)
+            setTimeout(() => {
+                clearValidationError();
+            }, 10000);
+        }
+        if (response.data.success) {
+            snackbar.value = true
+            text.value = "Submitted Successfully."
+            addScheduledialog.value = false
+            // location.reload()
+            router.push('/vet/schedules')
+        } else {
+            setValidationError()
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 onMounted(() => {
   loadUser()

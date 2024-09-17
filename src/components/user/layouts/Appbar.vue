@@ -5,41 +5,6 @@
     <template v-slot:prepend>
       <v-app-bar-nav-icon size="33" class="ms-2" @click="toggleMenu"></v-app-bar-nav-icon>
     </template>
-    <v-dialog fullscreen transition="dialog-bottom-transition">
-      <template v-slot:activator="{ props: activatorProps }">
-        <v-btn v-bind="activatorProps" icon>
-          <v-icon>mdi-forum-plus-outline</v-icon>
-        </v-btn>
-      </template>
-      <template v-slot:default="{ isActive }">
-        <v-card>
-            <v-card-title class="d-flex justify-space-between align-center">
-              Appointment Form
-              <v-btn icon="mdi-close" variant="text" @click="isActive.value = false"></v-btn>
-            </v-card-title>
-            <v-card-text>
-              <div class=" mb-4">Invite collaborators to your network and grow your connections.</div>
-              <v-form @submit.prevent="createAppointment">
-                <v-select class="mb-2" color="primary" density="compact" clearable chips label="Select a schedule" variant="outlined" >
-                  <option v-for="pet in petItem" :key="pet.id" :value="pet.id">
-                    {{ pet.name }}
-                  </option>
-                </v-select>
-              </v-form>
-            </v-card-text>
-
-      <v-card-actions>
-        <v-spacer></v-spacer>
-
-        <v-btn
-          text="Close Dialog"
-          @click="isActive.value = false"
-        ></v-btn>
-      </v-card-actions>
-    </v-card>
-  </template>
-    </v-dialog>
-
         <v-btn icon>
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -110,7 +75,6 @@ const loadUser = async () => {
     })
     name.value = response.data.name
     email.value = response.data.email
-    console.log(name.value)
   } catch (error) {
     if (error.response.status === 401) {
       localStorage.removeItem('userToken');
@@ -137,38 +101,8 @@ const logout = async () => {
         console.error(error);
     }
 };
-const createAppointment = async () => {
-  try {
-    const token = localStorage.getItem('userToken');
-    const response = await axios.post(BASE_URL + '/user/appointment', formData, {
-      headers: {
-        Authorization: `Beare ${token}`
-      }
-    })
-  } catch (error) {
-    console.log(error)
-  }
-}
 
-const petItem = ref([])
-const selectedPet = ref(null);
-
-const fetchPet = async () => {
-  try {
-    const token = localStorage.getItem('userToken')
-    const response = await axios.get(BASE_URL + '/user/appointment/pet', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    petItem.value = response.data.data
-    console.log(petItem.value)
-  } catch (error) {
-    console.log(error)
-  }
-}
 onMounted(() => {
-  fetchPet()
   loadUser()
 })
 
