@@ -45,7 +45,7 @@
             </v-row>
           </v-form>
           <div class="text-center">
-              <p class="text-muted mt-4">Don't have an account? <RouterLink to="/register" class="text-decoration-none text-purple-lighten-3"><span>Register here</span></RouterLink></p>
+              <p class="text-muted mt-4">Don't have an account? <RouterLink to="/vet/register" class="text-decoration-none text-purple-lighten-3"><span>Register here</span></RouterLink></p>
           </div>
         </div>
       </v-col>

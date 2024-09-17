@@ -5,7 +5,9 @@
     <template v-slot:prepend>
       <v-app-bar-nav-icon size="33" class="ms-2" @click="toggleMenu"></v-app-bar-nav-icon>
     </template>
-    <!-- <v-app-bar-title>My Dashboard</v-app-bar-title> -->
+        <v-btn icon>
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
   </v-app-bar>
 
   <v-navigation-drawer v-model="drawer" flat color="deep-purple-darken-1">
@@ -54,7 +56,7 @@ const toggleMenu = () => {
 const navDrawitems = ref([
   { icon: 'mdi-chart-donut', text: 'Dashboard', routeName: 'Home' },
   { icon: 'mdi-paw-outline', text: 'Pet', routeName: 'Pet'},
-  { icon: 'mdi-history', text: 'History', routeName: 'Vet User'},
+  { icon: 'mdi-history', text: 'History', routeName: 'History'},
   { icon: 'mdi-account-outline', text: 'Profile', routeName: 'Vet Queue'},
 ]);
 
@@ -73,7 +75,6 @@ const loadUser = async () => {
     })
     name.value = response.data.name
     email.value = response.data.email
-    console.log(name.value)
   } catch (error) {
     if (error.response.status === 401) {
       localStorage.removeItem('userToken');

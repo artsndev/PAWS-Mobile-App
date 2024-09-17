@@ -98,6 +98,22 @@ const routes = [
       requiresUserAuth: true,
     }
   },
+  {
+    path: '/pet/profile/:id',
+    name: 'Pet Profile',
+    component: () => import('../components/user/PetProfile.vue'),
+    meta: {
+      requiresUserAuth: true,
+    }
+  },
+  {
+    path: '/history',
+    name: 'History',
+    component: () => import('../components/user/History.vue'),
+    meta: {
+      requiresUserAuth: true,
+    }
+  },
 ]
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
