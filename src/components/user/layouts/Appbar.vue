@@ -56,7 +56,7 @@ const toggleMenu = () => {
 const navDrawitems = ref([
   { icon: 'mdi-chart-donut', text: 'Dashboard', routeName: 'Home' },
   { icon: 'mdi-paw-outline', text: 'Pet', routeName: 'Pet'},
-  { icon: 'mdi-history', text: 'History', routeName: 'Vet User'},
+  { icon: 'mdi-history', text: 'History', routeName: 'History'},
   { icon: 'mdi-account-outline', text: 'Profile', routeName: 'Vet Queue'},
 ]);
 

@@ -106,6 +106,14 @@ const routes = [
       requiresUserAuth: true,
     }
   },
+  {
+    path: '/history',
+    name: 'History',
+    component: () => import('../components/user/History.vue'),
+    meta: {
+      requiresUserAuth: true,
+    }
+  },
 ]
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

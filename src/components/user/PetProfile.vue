@@ -50,20 +50,8 @@
             <v-card-text>
               <div class=" mb-4">Invite collaborators to your network and grow your connections.</div>
               <v-form @submit.prevent="createAppointment">
-                <v-text-field v-model="form.pet_id" class="d-none"  label="Hello"></v-text-field>
-                <v-text-field v-model="form.veterinarian_id" class="d-none"  label="Hello"></v-text-field>
-                <v-text-field v-model="form.schedule_id" class="d-none"  label="Hello"></v-text-field>
-                <v-select class="mb-2" :error-messages="appointment_error" color="primary" v-model="form.appointment_time" density="compact" clearable chips label="Select a schedule" :items="scheduleItem" variant="outlined" ></v-select>
-                <!-- <v-select class="mb-2" :error-messages="appointment_session_error" v-model="form.session_of_appointment" color="primary" variant="outlined" density="compact" :items="items" label="Select a Session of appointment" multiple>
-                  <template v-slot:selection="{ item, index }">
-                    <v-chip v-if="index < 1">
-                      <span>{{ item.title }}</span>
-                    </v-chip>
-                    <span v-if="index === 1" class="text-grey text-caption align-self-center">
-                      (+{{ form.session_of_appointment.length - 1 }} others)
-                    </span>
-                  </template>
-                </v-select> -->
+                <v-select class="mb-2" color="primary" v-model="form.veterinarian_id" density="compact" clearable chips label="Select a Veterinarian" :items="vetItem" item-title="name" item-value="id" @update:modelValue="loadSchedulesForVet" variant="outlined"></v-select>
+                <v-select class="mb-2" :error-messages="schedule_id_error" color="primary" v-model="form.schedule_id" density="compact" clearable chips label="Select a schedule" :items="scheduleItem" item-title="schedule_time" item-value="id" @change="schedId.value = $event" variant="outlined"></v-select>
                 <v-textarea :error-messages="appointment_purpose_error" v-model="form.purpose_of_appointment" label="Purpose of Appointment. *" density="compact" :counter="300" class="mb-2" rows="3" variant="outlined" persistent-counter color="primary" auto-grow></v-textarea>
                 <v-btn color="primary" block type="submit" class="text-decoration-none">Submit a Request</v-btn>
               </v-form>
@@ -94,7 +82,7 @@ const species = ref('')
 const sex = ref('')
 const age = ref('')
 
-const petsId = ref(null)
+const petId = ref(null)
 
 const router = useRouter()
 
@@ -105,7 +93,7 @@ const formatDate = (dateTime) => {
 const loadUser = async () => {
   try {
     const token = localStorage.getItem('userToken')
-    const response = await axios.get(BASE_URL + '/user/pet/'+petsId.value, {
+    const response = await axios.get(BASE_URL + '/user/pet/'+petId.value, {
       headers : {
         Authorization: `Bearer ${token}`
       }
@@ -129,27 +117,9 @@ const loadUser = async () => {
     }
   }
 }
-
-const formattedDate = (date) => {
-    if (!date) return '';
-    const d = new Date(date);
-
-    // Pad single digits with leading zeros
-    const pad = (num) => num.toString().padStart(2, '0');
-
-    const year = d.getFullYear();
-    const month = pad(d.getMonth() + 1); // Months are zero-based, so add 1
-    const day = pad(d.getDate());
-    const hours = pad(d.getHours());
-    const minutes = pad(d.getMinutes());
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
-}
-
-const petId = ref(null)
 const veterinarianId = ref(null)
 const schedId = ref(null)
-const appointment_error = ref('')
-const appointment_session_error = ref('')
+const schedule_id_error = ref('')
 const appointment_purpose_error = ref('')
 const error = ref('')
 const timer = ref(null)
@@ -157,10 +127,37 @@ const form = reactive({
   pet_id: petId,
   veterinarian_id: veterinarianId,
   schedule_id: schedId,
-  appointment_time: null,
   purpose_of_appointment: '',
-  session_of_appointment: [],
 })
+
+const vetItem = ref([])
+const scheduleItem = ref([])
+const vetSchedules = ref({})
+const loadVet = async () => {
+  try {
+    const token = localStorage.getItem('userToken')
+    const response = await axios.get(BASE_URL + '/user/appointment/vet', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    vetItem.value = response.data.data
+    vetItem.value.forEach((vet) => {
+      vetSchedules.value[vet.id] = vet.schedule.map((schedule) => ({
+        ...schedule,
+        schedule_time: formattedDate(schedule.schedule_time),
+        id: schedule.id
+      }))
+      if (vet.schedule && vet.schedule) {
+        schedId.value = vet.schedule.id
+      }
+    })
+    console.log(vetItem.value)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const addAppointment = ref(false)
 const createAppointment = async () => {
   try {
@@ -168,9 +165,7 @@ const createAppointment = async () => {
     formData.append('pet_id', form.pet_id);
     formData.append('veterinarian_id', form.veterinarian_id);
     formData.append('schedule_id', form.schedule_id);
-    formData.append('appointment_time', formattedDate(form.appointment_time));
     formData.append('purpose_of_appointment', form.purpose_of_appointment);
-    formData.append('session_of_appointment', form.session_of_appointment.join(', '));
     const token = localStorage.getItem('userToken');
     const response = await axios.post(BASE_URL + '/user/appointment', formData, {
       headers: {
@@ -179,8 +174,7 @@ const createAppointment = async () => {
     })
 
     const clearValidationErrors = () => {
-      appointment_error.value = '';
-      appointment_session_error.value = '';
+      schedule_id_error.value = '';
       appointment_purpose_error.value = '';
     }
 
@@ -191,9 +185,8 @@ const createAppointment = async () => {
     const setValidationError = () => {
       clearValidationErrors();
       timer.value = setTimeout(() => {
-        appointment_error.value = response.data.errors.appointment_time;
-        appointment_session_error.value = response.data.errors.purpose_of_appointment;
-        appointment_purpose_error.value = response.data.errors.session_of_appointment;
+        schedule_id_error.value = response.data.errors.schedule_id;
+        appointment_purpose_error.value = response.data.errors.purpose_of_appointment;
       }, 1);
       setTimeout(() => {
         clearValidationErrors();
@@ -209,12 +202,12 @@ const createAppointment = async () => {
         clearErrorValidation();
       }, 10000);
     }
+    console.log(response.data)
     if(response.data.success){
       snackbar.value = true
       addAppointment.value = false
-      // scheduleItem.value = scheduleItem.value.filter(time => time !== formatDate(form.appointment_time));
       router.push({
-        name: 'Session'
+        name: 'Pet'
       })
     } else {
       if (response.data.errors) {
@@ -228,11 +221,30 @@ const createAppointment = async () => {
   }
 }
 
+const loadSchedulesForVet = (vetId) => {
+  scheduleItem.value = vetSchedules.value[vetId]
+}
+
+const formattedDate = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+
+    // Pad single digits with leading zeros
+    const pad = (num) => num.toString().padStart(2, '0');
+
+    const year = d.getFullYear();
+    const month = pad(d.getMonth() + 1); // Months are zero-based, so add 1
+    const day = pad(d.getDate());
+    const hours = pad(d.getHours());
+    const minutes = pad(d.getMinutes());
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
 const route = useRoute()
 
 onMounted(() => {
-  petsId.value = route.params.id
+  petId.value = route.params.id
   loadUser()
+  loadVet()
 })
 </script>
 
