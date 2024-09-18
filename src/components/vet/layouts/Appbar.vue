@@ -131,10 +131,9 @@ const logout = async () => {
 
 const snackbar = ref(false)
 const text = ref('')
-
+const timer = ref(null)
 const schedule_time_error = ref('')
 
-const timer = ref(null)
 
 const form = reactive({
     schedule_time: ''

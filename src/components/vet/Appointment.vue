@@ -77,6 +77,7 @@
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer></v-spacer>
+                      <v-btn @click="downloadPdf(item.id)">Download Report</v-btn>
                       <v-btn text="Close Dialog" @click="isActive.value = false"></v-btn>
                     </v-card-actions>
                   </v-card>
@@ -213,6 +214,26 @@ const form = reactive({
 })
 const timer = ref(null)
 
+const downloadPdf = async (id) => {
+  try {
+    const token = localStorage.getItem('vetToken')
+    const response = await axios.get(BASE_URL +'/download/'+id, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      responseType: 'blob' // Add this line
+    })
+    const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `report-${id}.pdf`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    console.log(response)
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 const physical_exam_error = ref('')
 const treatment_plan_error = ref('')
@@ -250,20 +271,6 @@ const addTreatment = async () => {
         } else {
             setValidationError()
         }
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-const fetchTreatment = async () => {
-  try {
-    const token = localStorage.getItem('vetToken');
-    const response = await axios.get(BASE_URL + '/vet/appointment', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    data.value = response.data.data
   } catch (error) {
     console.log(error)
   }
@@ -366,6 +373,5 @@ watch([searchQuery, pagination], () => {
 
 onMounted(() => {
   fetchData()
-  fetchTreatment()
 });
 </script>

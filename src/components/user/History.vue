@@ -8,7 +8,7 @@
   </v-breadcrumbs>
   <v-row no-gutters>
     <v-col cols="12">
-      <v-card-title>List of Users</v-card-title>
+      <v-card-title>History of Appointments</v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" loading-text="Loading... Please wait" :items="filteredData" :items-per-page="pagination.rowsPerPage" v-model:page="pagination.page" :server-items-length="totalResults" class="elevation-0" :loading="isLoading">
           <template v-slot:top>
@@ -16,80 +16,68 @@
               <v-text-field rounded color="primary" variant="outlined" v-model="searchQuery"  density="compact" label="Search by Name or Email" single-line hide-details/>
             </v-toolbar>
           </template>
-          <template v-slot:item.name="{ item }">{{ item.veterinarian.name }}</template>
+          <template v-slot:item.name="{ item }">{{ item.name }}</template>
           <template v-slot:item.actions="{ item }">
             <div class="text-end mx-n2">
               <!-- View Dialog -->
-              <v-dialog v-model="item.viewDialog" max-width="500" persistent>
+              <v-dialog v-model="item.viewDialog" max-width="500" persistent fullscreen>
                 <template v-slot:activator="{ props }">
                   <v-btn density="comfortable" icon @click="viewItem(item)" variant="text" color="deep-purple-darken-1" v-bind="props">
                     <v-icon>mdi-eye</v-icon>
                   </v-btn>
                 </template>
                 <template v-slot:default="{ isActive }">
-                  <v-card title="View Patient's Profile" prepend-icon="mdi-badge-account-horizontal-outline">
+                  <v-card title="View Appointment" prepend-icon="mdi-badge-account-horizontal-outline">
                     <v-card-text>
                       <div class="text-center">
                         <v-avatar size="100" class="mx-auto">
                           <img src="https://randomuser.me/api/portraits/women/85.jpg" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
                         </v-avatar>
-                        <h2 class="mx-auto font-weight-regular mt-3">{{ item.name }}</h2>
-                        <p class="mx-auto text-grey font-weight-regular">{{ item.email }}</p>
+                        <h2 class="mx-auto font-weight-regular mt-3">{{ item.veterinarian.name }}</h2>
+                        <p class="mx-auto text-grey font-weight-regular">{{ item.veterinarian.email }}</p>
                       </div>
-                      <v-list nav>
-                        <v-list-item>
-                          <p class="fs-10 mb-5">Details</p>
-                          <v-list-item-title class="font-weight-medium fs-10 mb-2">
-                            <v-icon>mdi-at</v-icon>
-                            <span class="mx-2">{{ item.email }}</span>
-                          </v-list-item-title>
-                          <v-list-item-title class="font-weight-medium fs-10 mb-2">
-                            <v-icon>mdi-cake-variant-outline</v-icon>
-                            <span class="mx-2">{{ item.birthdate }}</span>
-                          </v-list-item-title>
-                          <v-list-item-title class="font-weight-medium fs-10 mb-2">
-                            <v-icon>mdi-phone-outline</v-icon>
-                            <span class="mx-2">{{ item.phone_number }}</span>
-                          </v-list-item-title>
-                          <v-list-item-title class="font-weight-medium fs-10 mb-2">
-                            <v-icon>mdi-map-marker-radius-outline</v-icon>
-                            <span class="mx-2 text-wrap mb-2">{{ item.address }}</span>
-                          </v-list-item-title>
-                        </v-list-item>
-                      </v-list>
+                      <v-divider class="mt-3 mb-3"></v-divider>
+                      <p class="fs-10 mb-5">Veterinarian Details</p>
+                      <v-list-item-title class="font-weight-medium fs-10 mb-2 mt-n4">
+                          <v-icon>mdi-at</v-icon>
+                          <span class="mx-2">{{ item.veterinarian.email }}</span>
+                      </v-list-item-title>
+                      <v-divider class="mt-3 mb-3"></v-divider>
+                      <p>Pet Appointment Details</p>
+                      <v-form class="mt-3">
+                        <v-row gutters="1">
+                          <v-col cols="6" >
+                            <v-text-field readonly v-model="item.pet.name" density="compact" variant="outlined" color="deep-purple-darken-3" label="Pet's Name"></v-text-field>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-text-field readonly v-model="item.pet.breed" density="compact" variant="outlined" color="deep-purple-darken-3" label="Pet's Breed"></v-text-field>
+                          </v-col>
+                        </v-row>
+                        <v-row class="mt-n6">
+                          <v-col cols="6">
+                            <v-text-field readonly v-model="item.pet.sex" density="compact" variant="outlined" color="deep-purple-darken-3" label="Pet's Sex"></v-text-field>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-text-field readonly v-model="item.pet.species" density="compact" variant="outlined" color="deep-purple-darken-3" label="Pet's Species"></v-text-field>
+                          </v-col>
+                        </v-row>
+                        <v-text-field readonly v-model="item.pet.color" density="compact" variant="outlined" color="deep-purple-darken-3" label="Pet's Color"></v-text-field>
+                        <v-text-field readonly v-model="item.schedule.schedule_time" density="compact" variant="outlined" color="deep-purple-darken-3" label="Appointment Schedule"></v-text-field>
+                        <v-textarea readonly v-model="item.purpose_of_appointment" density="compact" color="deep-purple-darken-3" variant="outlined" label="Purpose of Appointment" auto-grow rows="1"></v-textarea>
+                      </v-form>
+                      <v-divider class="mt-3 mb-3"></v-divider>
+                      <p>Treatment Details</p>
+                      <div v-for="(result, index) in item.result" :key="index">
+                        <v-form class="mt-6">
+                          <v-text-field readonly v-model="result.physical_exam" density="compact" variant="outlined" color="deep-purple-darken-3" label="Physical Examination"></v-text-field>
+                          <v-text-field readonly v-model="result.treatment_plan" density="compact" variant="outlined" color="deep-purple-darken-3" label="Treatment Plan"></v-text-field>
+                        </v-form>
+                        <v-divider v-if="index !== item.result.length - 1" ></v-divider>
+                      </div>
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn text="Close Dialog" @click="isActive.value = false"></v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </template>
-              </v-dialog>
-              <v-dialog v-model="item.deleteDialog" max-width="500" persistent>
-                <template v-slot:activator="{ props }">
-                  <v-btn density="comfortable" icon @click="deleteItem(item)" variant="text" color="red-darken-3" v-bind="props">
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </template>
-                <template v-slot:default="{ isActive }">
-                  <v-card >
-                    <v-toolbar color="primary">
-                      <v-toolbar-title>Delete this account?</v-toolbar-title>
-                      <v-btn icon dark @click="isActive.value = false">
-                        <v-icon>mdi-close</v-icon>
-                      </v-btn>
-                    </v-toolbar>
-                    <v-card-text>{{ message }}</v-card-text>
-                    <v-card-text>
-                      <v-alert v-model="item.alert" border="start" variant="tonal" color="blue-grey-darken-1" class="text-medium-emphasis text-caption mb-2">
-                            Note: If you will delete this account, all of his data will be removed from the system.
-                      </v-alert>
-                    </v-card-text>
-                    <v-divider></v-divider>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn text="Yes" prepend-icon="mdi-check" class="text-none" color="green-darken-1" :loading="isLoading" @click="deleteItem(item.id)"></v-btn>
-                      <v-btn text="No" prepend-icon="mdi-close" color="red-darken-1" class="text-none" @click="isActive.value = false"></v-btn>
                     </v-card-actions>
                   </v-card>
                 </template>
@@ -117,7 +105,7 @@ import { BASE_URL } from '@/server';
 
 const breadCrumbsItems = ref([
     { title: 'Dashboard', href: '/doctor/dashboard', disabled: false },
-    { title: 'User', href: '/doctor/dashboard', disabled: true },
+    { title: 'Appointments', href: '/doctor/dashboard', disabled: true },
 ]);
 const data = ref([]); // Initialize as an empty array
 const searchQuery = ref('');
@@ -134,15 +122,15 @@ const pagination = ref({
 });
 
 const headers = [
-    { title: 'Name', value: 'name', align: 'left' },
+    { title: 'Veterinarians Name', value: 'veterinarian.name', align: 'left' },
     { title: 'Actions', value: 'actions', sortable: false, align: 'end' }, // Added actions column
 ];
 
 const fetchData = async () => {
     try {
         isLoading.value = true;
-        const token = localStorage.getItem('vetToken');
-        const response = await axios.get(BASE_URL + '/vet/user', {
+        const token = localStorage.getItem('userToken');
+        const response = await axios.get(BASE_URL + '/user/appointment', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -163,11 +151,29 @@ const fetchData = async () => {
     } finally {
         isLoading.value = false;
     }
-};
+}
 
-const editItem = (item) => {
-    console.log('Edit item:', item);
-  // Implement edit functionality here
+const formattedDate = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+
+    // Pad single digits with leading zeros
+    const pad = (num) => num.toString().padStart(2, '0');
+
+    const year = d.getFullYear();
+    const month = pad(d.getMonth() + 1); // Months are zero-based, so add 1
+    const day = pad(d.getDate());
+    const hours = pad(d.getHours());
+    const minutes = pad(d.getMinutes());
+
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+const addItem = (item) => {
+  form.appointment_id = item.id;
+    console.log('View item:', item);
+  // Implement view functionality here
+
 };
 
 const viewItem = (item) => {
@@ -206,8 +212,7 @@ const filteredData = computed(() => {
   if (!data.value) return []; // Ensure data is defined before filtering
     const search = searchQuery.value.toLowerCase();
     return data.value.filter(item =>
-        item.name.toLowerCase().includes(search) ||
-        item.email.toLowerCase().includes(search)
+        item.veterinarian.name.toLowerCase().includes(search)
     );
 });
 
@@ -215,5 +220,7 @@ watch([searchQuery, pagination], () => {
   pagination.value.page = 1; // Reset to the first page on search
 });
 
-onMounted(fetchData);
+onMounted(() => {
+  fetchData()
+});
 </script>
