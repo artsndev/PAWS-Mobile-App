@@ -123,7 +123,7 @@ const logout = async () => {
             },
         });
         localStorage.removeItem('vetToken');
-        router.push({ name: 'Login' });
+        router.push({ name: 'Vet Login' });
     } catch (error) {
         console.error(error);
     }
