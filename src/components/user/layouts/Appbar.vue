@@ -48,7 +48,7 @@
   <v-navigation-drawer v-model="drawer" flat color="deep-purple-darken-1">
     <div class="text-center mt-3">
       <v-avatar size="70" class="mx-auto">
-        <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
+        <img :src="avatar" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
       </v-avatar>
       <v-list>
         <v-list-item :subtitle="email" :title="name"></v-list-item>
@@ -82,6 +82,7 @@ import { BASE_URL } from '@/server';
 import axios from 'axios';
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import avatar from '@/assets/images/avatar.png'
 
 const drawer = ref(false);
 const toggleMenu = () => {
@@ -164,7 +165,7 @@ const navDrawitems = ref([
   { icon: 'mdi-chart-donut', text: 'Dashboard', routeName: 'Home' },
   { icon: 'mdi-paw-outline', text: 'Pet', routeName: 'Pet'},
   { icon: 'mdi-history', text: 'History', routeName: 'History'},
-  { icon: 'mdi-account-outline', text: 'Profile', routeName: 'Vet Queue'},
+  // { icon: 'mdi-account-outline', text: 'Profile', routeName: 'Vet Queue'},
 ]);
 
 const router = useRouter();

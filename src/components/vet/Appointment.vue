@@ -158,6 +158,8 @@ import { computed, onMounted, reactive, ref, watch } from 'vue';
 import Appbar from './layouts/Appbar.vue'
 import axios from 'axios';
 import { BASE_URL } from '@/server';
+import { Plugins } from '@capacitor/core';
+import { Filesystem, FilesystemDirectory } from '@capacitor/filesystem';
 
 const breadCrumbsItems = ref([
     { title: 'Dashboard', href: '/doctor/dashboard', disabled: false },
@@ -188,6 +190,7 @@ const form = reactive({
 })
 const timer = ref(null)
 
+
 const downloadPdf = async (id) => {
   try {
     const token = localStorage.getItem('vetToken')
@@ -197,18 +200,23 @@ const downloadPdf = async (id) => {
       },
       responseType: 'blob' // Add this line
     })
-    const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `report-${id}.pdf`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-    console.log(response)
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const fileName = `report-${id}.pdf`;
+
+    // Use the @capacitor/filesystem plugin to save the file to the device
+    const fileOptions = {
+      path: `${FilesystemDirectory.Documents}/${fileName}`,
+      data: blob,
+    };
+    Filesystem.writeFile(fileOptions).then((result) => {
+      console.log(`File downloaded to: ${result.uri}`);
+    }).catch((error) => {
+      console.error(`Error downloading file: ${error}`);
+    });
   } catch (error) {
     console.log(error)
   }
 }
-
 const physical_exam_error = ref('')
 const treatment_plan_error = ref('')
 

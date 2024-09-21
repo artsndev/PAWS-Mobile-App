@@ -33,7 +33,7 @@
             </v-row>
           </v-form>
           <div class="text-center">
-              <p class="text-muted mt-4">Already have an account? <RouterLink to="/login" class="text-decoration-none text-purple-lighten-2"><span>Login here</span></RouterLink></p>
+              <p class="text-muted mt-4">Already have an account? <RouterLink to="/vet/login" class="text-decoration-none text-purple-lighten-2"><span>Login here</span></RouterLink></p>
           </div>
         </div>
       </v-col>

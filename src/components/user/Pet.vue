@@ -2,19 +2,19 @@
 <template>
   <Appbar/>
   <v-container>
-      <v-card-title>Your Pet</v-card-title>
+      <v-card-title class="mb-5">Your Pet</v-card-title>
         <v-row>
           <v-col cols="6" v-for="(item, index) in data" :key="index">
-              <v-card rounded="xl" class="mt-n3 mb-1" elevation="3" :to="'/pet/profile/' + item.id">
+              <v-card rounded="xl" class="mt-n3 mb-1 text-center" elevation="3" :to="'/pet/profile/' + item.id">
                   <v-row class="mx-1 mt-1">
-                      <v-col cols="8">
+                      <v-col cols="12">
                         <v-avatar size="50" class="mx-auto mb-3">
-                          <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
+                          <img :src="petImage" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
                         </v-avatar>
                       </v-col>
-                      <v-col cols="4" class="mt-n1 text-end">
+                      <!-- <v-col cols="4" class="mt-n1 text-end">
                           <v-btn icon="mdi-trash-can-outline" density="comfortable" variant="flat"></v-btn>
-                      </v-col>
+                      </v-col> -->
                   </v-row>
                   <v-list lines="one">
                       <v-list-item class="mt-n3 mb-1">
@@ -40,6 +40,7 @@ import axios from 'axios';
 import Appbar from './layouts/Appbar.vue'
 import { BASE_URL } from '@/server';
 import { onMounted, ref } from 'vue';
+import petImage from '@/assets/images/dog.jpg'
 
 const data = ref([])
 

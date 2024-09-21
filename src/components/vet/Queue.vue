@@ -31,7 +31,7 @@
                     <v-card-text>
                       <div class="text-center">
                         <v-avatar size="100" class="mx-auto">
-                          <img src="https://randomuser.me/api/portraits/women/85.jpg" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
+                          <img :src="avatar" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
                         </v-avatar>
                         <h2 class="mx-auto font-weight-regular mt-3">{{ item.user.name }}</h2>
                         <p class="mx-auto text-grey font-weight-regular">{{ item.user.email }}</p>
@@ -108,6 +108,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue';
 import Appbar from './layouts/Appbar.vue'
 import axios from 'axios';
 import { BASE_URL } from '@/server';
+import avatar from '@/assets/images/avatar.png'
 
 const breadCrumbsItems = ref([
     { title: 'Dashboard', href: '/doctor/dashboard', disabled: false },
