@@ -25,20 +25,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import Appbar from './layouts/Appbar.vue'
 import { component as VueNumber } from '@coders-tm/vue-number-format'
+import axios from 'axios';
+import { BASE_URL } from '@/server';
 
-const count_patients = ref(1)
-const count_doctors = ref(2)
+const count_users = ref(1)
+const count_available_schedules = ref(1)
+const count_taken_schedules = ref(1)
 const count_appointments = ref(5)
-const count_queues = ref(53)
+const count_queuing = ref(53)
+const count_queued = ref(53)
 
 const cardItems = ref([
-    { title: 'Total Users', number: count_patients, icon: 'mdi-account-multiple-outline'},
-    { title: 'Total Pets', number: count_doctors, icon: 'mdi-paw'},
-    { title: 'Appointments', number: count_appointments, icon: 'mdi-clipboard-text-multiple-outline'},
-    { title: 'Completed Appointments', number: count_queues, icon: 'mdi-clipboard-check-multiple-outline'},
+    { title: 'Total Users', number: count_users, icon: 'mdi-account-multiple-outline'},
+    { title: 'Available Schedules', number: count_available_schedules, icon: 'mdi-calendar-multiple'},
+    { title: 'Taken Schedules', number: count_taken_schedules, icon: 'mdi-calendar-multiple-check'},
+    { title: 'Requested Appointments', number: count_appointments, icon: 'mdi-clipboard-text-multiple-outline'},
+    { title: 'Pending Appointments', number: count_queuing, icon: 'mdi-clipboard-multiple-outline'},
+    { title: 'Completed Appointments', number: count_queued, icon: 'mdi-clipboard-check-multiple-outline'},
 ])
 
 const number = {
@@ -48,6 +54,37 @@ const number = {
     masked: false,
     disabled: true,
 }
+
+const countData = async () => {
+    try {
+        const token = localStorage.getItem('vetToken')
+        const response = await axios.get(BASE_URL + '/vet/count', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        const data = response.data.data
+        count_users.value = data.user_count
+        count_available_schedules.value = data.available_schedule_count
+        count_taken_schedules.value = data.taken_schedule_count
+        count_appointments.value = data.appointment_count
+        count_queuing.value = data.queue_count
+        count_queued.value = data.queued_count
+        console.log(data)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+onMounted(() => {
+    countData();
+    const intervalId = setInterval(() => {
+        countData();
+    }, 5000);
+    onUnmounted(() => {
+        clearInterval(intervalId);
+    });
+});
 </script>
 
 <style scoped>

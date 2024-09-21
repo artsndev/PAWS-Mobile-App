@@ -81,7 +81,7 @@ const toggleMenu = () => {
 const navDrawitems = ref([
   { icon: 'mdi-chart-donut', text: 'Dashboard', routeName: 'Vet Dashboard' },
   { icon: 'mdi-clipboard-text-multiple-outline', text: 'Appointments', routeName: 'Vet Appointment'},
-  { icon: 'mdi-account-multiple-outline', text: 'Schedule', routeName: 'Vet Schedule'},
+  { icon: 'mdi-calendar-multiple', text: 'Schedule', routeName: 'Vet Schedule'},
   { icon: 'mdi-account-multiple-outline', text: 'Users', routeName: 'Vet User'},
   { icon: 'mdi-clipboard-check-multiple-outline', text: 'Queued', routeName: 'Vet Queue'},
 ]);

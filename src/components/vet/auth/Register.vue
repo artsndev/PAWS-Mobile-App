@@ -14,8 +14,8 @@
     <v-row align="center" justify="center" class=" px-2 mt-5 mb-3" >
       <v-col cols="12" sm="8" md="8" lg="4" xl="3" xxl="4">
         <div class="mb-9" color="primary">
-          <h2 class="font-weight-bold mt-3 text-center">Get Started for Free!</h2>
-          <p class="mt-2 mb-6 text-center">Create your free account now.</p>
+          <h2 class="font-weight-bold mt-3 text-center">Veterinarian Register!</h2>
+          <p class="mt-2 mb-6 text-center">Create your free vetaccount now.</p>
           <v-alert v-if="error" icon="mdi-alert"  variant="tonal" class="mb-5"  color="red-darken-4">
             {{ error }}
           </v-alert>

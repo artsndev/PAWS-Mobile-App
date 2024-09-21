@@ -83,8 +83,13 @@
                   </v-card>
                 </template>
               </v-dialog>
-              <!-- Add Treatment Dialog -->
-              <v-dialog v-model="item.addDialog" max-width="500" persistent fullscreen>
+
+              <!-- Delete Dialog -->
+                  <v-btn  v-if="!doneAppointments[item.id]" density="comfortable" icon @click="markAsDone(item)" variant="text" color="warning">
+                    <v-icon>mdi-alert-outline</v-icon>
+                  </v-btn>
+                  <!-- Add Treatment Dialog -->
+              <v-dialog v-else v-model="item.addDialog" max-width="500" persistent fullscreen>
                 <template v-slot:activator="{ props }">
                   <v-btn density="comfortable" icon @click="addItem(item)" variant="text" color="primary" v-bind="props">
                     <v-icon>mdi-clipboard-text-multiple-outline</v-icon>
@@ -133,36 +138,6 @@
                   </v-card>
                 </template>
               </v-dialog>
-              <!-- Delete Dialog -->
-              <v-dialog v-model="item.deleteDialog" max-width="500" persistent>
-                <template v-slot:activator="{ props }">
-                  <v-btn density="comfortable" icon @click="deleteItem(item)" variant="text" color="red-darken-3" v-bind="props">
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </template>
-                <template v-slot:default="{ isActive }">
-                  <v-card >
-                    <v-toolbar color="primary">
-                      <v-toolbar-title>Delete this account?</v-toolbar-title>
-                      <v-btn icon dark @click="isActive.value = false">
-                        <v-icon>mdi-close</v-icon>
-                      </v-btn>
-                    </v-toolbar>
-                    <v-card-text>{{ message }}</v-card-text>
-                    <v-card-text>
-                      <v-alert v-model="item.alert" border="start" variant="tonal" color="blue-grey-darken-1" class="text-medium-emphasis text-caption mb-2">
-                            Note: If you will delete this account, all of his data will be removed from the system.
-                      </v-alert>
-                    </v-card-text>
-                    <v-divider></v-divider>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn text="Yes" prepend-icon="mdi-check" class="text-none" color="green-darken-1" :loading="isLoading" @click="deleteItem(item.id)"></v-btn>
-                      <v-btn text="No" prepend-icon="mdi-close" color="red-darken-1" class="text-none" @click="isActive.value = false"></v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </template>
-              </v-dialog>
             </div>
           </template>
           <template v-slot:no-data>
@@ -195,7 +170,6 @@ const snackbar = ref(false);
 const text = ref('');
 const color = ref('');
 const icon = ref('');
-const message = ref('Are you sure to remove this account from the system?');
 
 const pagination = ref({
     rowsPerPage: 10,
@@ -265,8 +239,10 @@ const addTreatment = async () => {
             }, 10000);
         }
         if (response.data.success) {
-            snackbar.value = true
-            text.value = "Submitted Successfully."
+          snackbar.value = true
+          icon.value = 'mdi-check'
+          color.value = 'success'
+          text.value = "Submitted successfully."
             fetchData()
         } else {
             setValidationError()
@@ -276,33 +252,7 @@ const addTreatment = async () => {
   }
 }
 
-
-const fetchData = async () => {
-    try {
-        isLoading.value = true;
-        const token = localStorage.getItem('vetToken');
-        const response = await axios.get(BASE_URL + '/vet/appointment', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        data.value = response.data.data
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        if (error.response && error.response.status === 401) {
-            snackbar.value = true;
-            text.value = 'Error fetching your data. Please try again.';
-            color.value = 'red'
-            icon.value = 'mdi-exclamation'
-            localStorage.removeItem('vetToken');
-            setTimeout(() => {
-                location.reload();
-            }, 3000);
-        }
-    } finally {
-        isLoading.value = false;
-    }
-}
+const doneAppointments = ref({}); // Local storage for isDone state
 
 const formattedDate = (date) => {
     if (!date) return '';
@@ -333,31 +283,69 @@ const viewItem = (item) => {
 
 };
 
-const deleteItem = async (userId) => {
-    try {
-        isLoading.value = true;
-        const token = localStorage.getItem('adminToken');
-        // eslint-disable-next-line no-unused-vars
-        const response = await axios.delete(BASE_URL + '/api/admin/user/' + userId, {
+const markAsDone = async (item) => {
+  try {
+        doneAppointments.value[item.id] = true;
+        localStorage.setItem('doneAppointments', JSON.stringify(doneAppointments.value));
+        isLoading.value = true
+        const formData = new FormData();
+        formData.append('user_id', item.user.id);
+        formData.append('pet_id', item.pet.id);
+        formData.append('appointment_id', item.id);
+        const token = localStorage.getItem('vetToken');
+        const response = await axios.post(BASE_URL + '/vet/queue', formData, {
             headers: {
-                Authorization: `Bearer ${token}`
-            }
+                'Authorization': `Bearer ${token}`,
+            },
         });
-        snackbar.value = true
-        color.value = 'success'
-        icon.value = 'mdi-check'
-        text.value = 'Deleted Successfully'
         fetchData();
+        snackbar.value = true
+        icon.value = 'mdi-check'
+        color.value = 'success'
+        text.value = "Request accepted and queued successfully."
     } catch (error) {
-        console.error('Error deleting user:', error);
+        console.error('Error marking as done:', error);
     } finally {
-        isLoading.value = false;
+        isLoading.value = false
     }
 };
 
 const totalResults = computed(() => {
     return data.value.length;
 });
+const dataFetched = ref(false);
+const fetchData = async () => {
+    try {
+        isLoading.value = true;
+        const token = localStorage.getItem('vetToken');
+        const response = await axios.get(BASE_URL + '/vet/appointment', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const fetchedData = response.data.data;
+        fetchedData.forEach((item) => {
+          item.isDone = doneAppointments.value[item.id] || false; // Merge local isDone state
+        });
+        data.value = fetchedData;
+        dataFetched.value = true; // Set flag to true after data has been fetched
+        console.log(data.value)
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        if (error.response && error.response.status === 401) {
+            snackbar.value = true;
+            text.value = 'Error fetching your data. Please try again.';
+            color.value = 'red'
+            icon.value = 'mdi-exclamation'
+            localStorage.removeItem('vetToken');
+            setTimeout(() => {
+                location.reload();
+            }, 3000);
+        }
+    } finally {
+        isLoading.value = false;
+    }
+}
 
 const filteredData = computed(() => {
   if (!data.value) return []; // Ensure data is defined before filtering
@@ -372,6 +360,10 @@ watch([searchQuery, pagination], () => {
 });
 
 onMounted(() => {
+  const storedDoneAppointments = localStorage.getItem('doneAppointments');
+  if (storedDoneAppointments) {
+    doneAppointments.value = JSON.parse(storedDoneAppointments);
+  }
   fetchData()
 });
 </script>
