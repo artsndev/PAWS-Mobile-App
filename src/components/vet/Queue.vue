@@ -94,9 +94,29 @@
 
                 </template>
               </v-dialog>
-              <v-btn v-if="!item.deleted_at" density="comfortable" icon @click="markAsDone(item.id)" variant="text" color="warning">
+              <v-dialog v-if="!item.deleted_at" v-model="item.openDialog" max-width="500" persistent>
+                <template v-slot:activator="{ props }">
+                  <v-btn density="comfortable" icon @click="openDialog(item)" variant="text" color="success" v-bind="props">
+                    <v-icon>mdi-check</v-icon>
+                  </v-btn>
+                </template>
+                <template v-slot:default="{ isActive }">
+                  <v-card>
+                    <v-card-text>
+                      Are you sure to accept this appointment?
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn density="comfortable" @click="markAsDone(item.id)" text="Accept Appointment" variant="text" color="success">
+                      </v-btn>
+                      <v-btn text="Close Dialog" @click="isActive.value = false"></v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </template>
+              </v-dialog>
+              <!-- <v-btn v-if="!item.deleted_at" density="comfortable" icon @click="markAsDone(item.id)" variant="text" color="warning">
                 <v-icon>mdi-alert-outline</v-icon>
-              </v-btn>
+              </v-btn> -->
 
             </div>
           </template>
@@ -141,6 +161,12 @@ const headers = [
     { title: 'Pet Owners Name', value: 'user.name', align: 'left' },
     { title: 'Actions', value: 'actions', sortable: false, align: 'end' }, // Added actions column
 ];
+
+const openDialog = (item) => {
+    console.log('Opened item:', item);
+  // Implement view functionality here
+
+};
 
 const formattedDate = (date) => {
     if (!date) return '';
