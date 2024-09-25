@@ -85,9 +85,30 @@
               </v-dialog>
 
               <!-- Delete Dialog -->
-                  <v-btn  v-if="!doneAppointments[item.id]" density="comfortable" icon @click="markAsDone(item)" variant="text" color="warning">
-                    <v-icon>mdi-alert-outline</v-icon>
+              <v-dialog v-if="!doneAppointments[item.id]" v-model="item.openDialog" max-width="500" persistent>
+                <template v-slot:activator="{ props }">
+                  <v-btn density="comfortable" icon @click="openDialog(item)" variant="text" color="success" v-bind="props">
+                    <v-icon>mdi-check</v-icon>
                   </v-btn>
+                </template>
+                <template v-slot:default="{ isActive }">
+                  <v-card>
+                    <v-card-text>
+                      Are you sure to accept this appointment?
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn density="comfortable" @click="markAsDone(item)" text="Accept Appointment" variant="text" color="success">
+                      </v-btn>
+                      <v-btn text="Close Dialog" @click="isActive.value = false"></v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </template>
+              </v-dialog>
+                  <!-- <v-btn  density="comfortable" icon @click="markAsDone(item)" variant="text" color="warning">
+                    <v-icon>mdi-alert-outline</v-icon>
+                  </v-btn> -->
+
                   <!-- Add Treatment Dialog -->
               <v-dialog v-else v-model="item.addDialog" max-width="500" persistent fullscreen>
                 <template v-slot:activator="{ props }">
@@ -289,6 +310,12 @@ const addItem = (item) => {
 
 const viewItem = (item) => {
     console.log('View item:', item);
+  // Implement view functionality here
+
+};
+
+const openDialog = (item) => {
+    console.log('Opened item:', item);
   // Implement view functionality here
 
 };

@@ -66,7 +66,7 @@
                         <v-textarea readonly v-model="item.appointment.purpose_of_appointment" density="compact" color="deep-purple-darken-3" variant="outlined" label="Purpose of Appointment" auto-grow rows="1"></v-textarea>
                       </v-form>
                       <v-divider class="mt-3 mb-3"></v-divider>
-                      <p>Treatment Details</p>
+                      <p>Pet Record</p>
                       <div v-for="(result, index) in item.appointment.result" :key="index">
                         <v-form class="mt-6">
                           <v-text-field readonly v-model="result.physical_exam" density="compact" variant="outlined" color="deep-purple-darken-3" label="Physical Examination"></v-text-field>
@@ -84,6 +84,16 @@
               </v-dialog>
 
               <!-- Delete Dialog -->
+              <v-dialog v-model="item.viewDialog" max-width="500" persistent fullscreen>
+                <template v-slot:activator="{ props }">
+                  <v-btn density="comfortable" icon @click="(item)" variant="text" color="deep-purple-darken-1" v-bind="props">
+                    <v-icon>mdi-eye</v-icon>
+                  </v-btn>
+                </template>
+                <template v-slot:default="{ isActive }">
+
+                </template>
+              </v-dialog>
               <v-btn v-if="!item.deleted_at" density="comfortable" icon @click="markAsDone(item.id)" variant="text" color="warning">
                 <v-icon>mdi-alert-outline</v-icon>
               </v-btn>
