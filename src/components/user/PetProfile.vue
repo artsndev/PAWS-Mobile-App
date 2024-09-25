@@ -43,7 +43,6 @@
               <v-btn icon="mdi-close" variant="text" @click="isActive.value = false"></v-btn>
             </v-card-title>
             <v-card-text>
-              <div class=" mb-4">Invite collaborators to your network and grow your connections.</div>
               <v-form @submit.prevent="createAppointment">
                 <v-select class="mb-2" color="primary" v-model="form.veterinarian_id" density="compact" clearable chips label="Select a Veterinarian" :items="vetItem" item-title="name" item-value="id" @update:modelValue="loadSchedulesForVet" variant="outlined"></v-select>
                 <v-select class="mb-2" :error-messages="schedule_id_error" color="primary" v-model="form.schedule_id" density="compact" clearable chips label="Select a schedule" :items="scheduleItem" item-title="schedule_time" item-value="id" @change="schedId.value = $event" variant="outlined"></v-select>
