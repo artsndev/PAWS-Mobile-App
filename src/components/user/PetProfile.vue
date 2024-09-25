@@ -4,38 +4,33 @@
   <v-container>
     <div class="text-center">
       <v-avatar size="100" class="mx-auto">
-        <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
+        <img :src="petImage" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
       </v-avatar>
       <h2 class="mx-auto font-weight-regular mt-3">{{ name }}</h2>
       <p class="mx-auto text-grey font-weight-regular">{{ age }}</p>
     </div>
+    <v-form class="mt-3">
+                        <v-row gutters="1">
+                          <v-col cols="6" >
+                            <v-text-field readonly v-model="name" density="compact" variant="outlined" color="deep-purple-darken-3" label="Pet's Name"></v-text-field>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-text-field readonly v-model="breed" density="compact" variant="outlined" color="deep-purple-darken-3" label="Pet's Breed"></v-text-field>
+                          </v-col>
+                        </v-row>
+                        <v-row class="mt-n6">
+                          <v-col cols="6">
+                            <v-text-field readonly v-model="sex" density="compact" variant="outlined" color="deep-purple-darken-3" label="Pet's Sex"></v-text-field>
+                          </v-col>
+                          <v-col cols="6">
+                            <v-text-field readonly v-model="species" density="compact" variant="outlined" color="deep-purple-darken-3" label="Pet's Species"></v-text-field>
+                          </v-col>
+                        </v-row>
+                        <v-text-field readonly v-model="color" density="compact" variant="outlined" color="deep-purple-darken-3" label="Pet's Color"></v-text-field>
+                      </v-form>
   </v-container>
   <!-- <v-divider></v-divider> -->
-    <v-list  nav>
-      <v-list-item>
-        <p class="fs-10 mb-5">Details</p>
-        <v-list-item-title class="font-weight-medium fs-10 mb-2">
-          <v-icon>mdi-briefcase-variant-outline</v-icon>
-          <span class="mx-2">{{ age }}</span>
-        </v-list-item-title>
-        <v-list-item-title class="font-weight-medium fs-10 mb-2">
-          <v-icon>mdi-at</v-icon>
-          <span class="mx-2">{{ breed }}</span>
-        </v-list-item-title>
-        <v-list-item-title class="font-weight-medium fs-10 mb-2">
-          <v-icon>mdi-cake-variant-outline</v-icon>
-          <span class="mx-2">{{ species }}</span>
-        </v-list-item-title>
-        <v-list-item-title class="font-weight-medium fs-10 mb-2">
-          <v-icon>mdi-phone-outline</v-icon>
-          <span class="mx-2">{{ sex }}</span>
-        </v-list-item-title>
-        <v-list-item-title class="font-weight-medium fs-10 mb-2">
-          <v-icon>mdi-map-marker-radius-outline</v-icon>
-          <span class="mx-2 text-wrap">{{ color }}</span>
-        </v-list-item-title>
-      </v-list-item>
-    </v-list>
+
     <v-footer class="position-bottom">
       <v-dialog v-model="addAppointment" transition="dialog-bottom-transition" fullscreen>
         <template v-slot:activator="{ props: activatorProps }">
@@ -48,7 +43,6 @@
               <v-btn icon="mdi-close" variant="text" @click="isActive.value = false"></v-btn>
             </v-card-title>
             <v-card-text>
-              <div class=" mb-4">Invite collaborators to your network and grow your connections.</div>
               <v-form @submit.prevent="createAppointment">
                 <v-select class="mb-2" color="primary" v-model="form.veterinarian_id" density="compact" clearable chips label="Select a Veterinarian" :items="vetItem" item-title="name" item-value="id" @update:modelValue="loadSchedulesForVet" variant="outlined"></v-select>
                 <v-select class="mb-2" :error-messages="schedule_id_error" color="primary" v-model="form.schedule_id" density="compact" clearable chips label="Select a schedule" :items="scheduleItem" item-title="schedule_time" item-value="id" @change="schedId.value = $event" variant="outlined"></v-select>
@@ -73,6 +67,8 @@ import axios from 'axios';
 import { BASE_URL } from '@/server';
 import { useRouter, useRoute } from 'vue-router';
 import dayjs from 'dayjs';
+import petImage from '@/assets/images/dog.jpg'
+
 
 const snackbar = ref(false)
 const name = ref('')

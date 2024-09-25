@@ -1,5 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
+  <!-- <Appbar/> -->
   <v-container class="py-16">
     <v-row align="center" justify="center" class="min-vh-100 px-2">
       <v-col cols="12" sm="8" md="8" lg="4" xl="3" xxl="4">
@@ -11,7 +12,7 @@
     </v-row>
   </v-container>
   <v-sheet class="d-flex align-end  mx-auto px-4 min-vh-100" color="deep-purple-darken-1" elevation="4" max-width="800" width="100%" style="border-top-left-radius: 30px; border-top-right-radius: 30px;">
-    <v-row align="center" justify="center" class=" px-2 mt-5 mb-16" >
+    <v-row align="center" justify="center" class=" px-2 mt-5 mb-6" >
       <v-col cols="12" sm="8" md="8" lg="4" xl="3" xxl="4">
         <div class="mb-9" color="primary">
           <h2 class="font-weight-bold mt-3 text-center">Welcome Back!</h2>
@@ -47,6 +48,9 @@
           <div class="text-center">
               <p class="text-muted mt-4">Don't have an account? <RouterLink to="/register" class="text-decoration-none text-purple-lighten-3"><span>Register here</span></RouterLink></p>
           </div>
+          <div class="text-center">
+              <p class="text-muted mt-4 ">Click Here to <RouterLink to="/vet/login" class="text-decoration-none text-purple-lighten-3"><span>login as Veterinarian</span></RouterLink></p>
+          </div>
         </div>
       </v-col>
     </v-row>
@@ -54,10 +58,12 @@
 </template>
 
 <script setup>
+import Appbar from '../layouts/auth/Navbar.vue';
 import { ref, reactive } from 'vue'
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { BASE_URL } from '@/server';
+import Navbar from '../layouts/auth/Navbar.vue';
 
 const router = useRouter();
 

@@ -11,11 +11,11 @@
     </v-row>
   </v-container>
   <v-sheet class="d-flex align-end  mx-auto px-4 min-vh-100" color="deep-purple-darken-1" elevation="4" max-width="800" width="100%" style="border-top-left-radius: 30px; border-top-right-radius: 30px;">
-    <v-row align="center" justify="center" class=" px-2 mt-5 mb-16" >
+    <v-row align="center" justify="center" class=" px-2 mt-5 mb-6" >
       <v-col cols="12" sm="8" md="8" lg="4" xl="3" xxl="4">
         <div class="mb-9" color="primary">
-          <h2 class="font-weight-bold mt-3 text-center">Welcome Back vet!</h2>
-          <p class="mt-2 mb-6 text-center">Glad to see you again 🥰</p>
+          <h2 class="font-weight-bold mt-3 text-center">Veterinarian Login!</h2>
+          <p class="mt-2 mb-6 text-center">Welcome back! 🤗</p>
           <v-alert v-if="error" icon="mdi-alert"  variant="tonal" class="mb-5"  color="red-darken-4">
             {{ error }}
           </v-alert>
@@ -46,6 +46,9 @@
           </v-form>
           <div class="text-center">
               <p class="text-muted mt-4">Don't have an account? <RouterLink to="/vet/register" class="text-decoration-none text-purple-lighten-3"><span>Register here</span></RouterLink></p>
+          </div>
+          <div class="text-center">
+              <p class="text-muted mt-4 ">Click Here to <RouterLink to="/login" class="text-decoration-none text-purple-lighten-3"><span>login as Client</span></RouterLink></p>
           </div>
         </div>
       </v-col>

@@ -7,9 +7,9 @@ export default function useStatusBar() {
     if (Capacitor.isPluginAvailable('StatusBar')) {
       if (Capacitor.getPlatform() === 'ios') {
         StatusBar.setStyle({ style: 'LIGHT' });
-        StatusBar.setBackgroundColor({ color: '#ffffff' });
+        StatusBar.setBackgroundColor({ color: '#FFFFFF00' });
       } else if (Capacitor.getPlatform() === 'android') {
-        StatusBar.setBackgroundColor({ color: '#ffffff' });
+        StatusBar.setBackgroundColor({ color: '#FFFFFF00' });
       }
     }
   }
@@ -22,7 +22,7 @@ export default function useStatusBar() {
     if (Capacitor.isPluginAvailable('StatusBar')) {
       if (Capacitor.getPlatform() === 'ios') {
         StatusBar.setStyle({ style: 'DARK' });
-        StatusBar.setBackgroundColor({ color: '#ffffff' });
+        StatusBar.setBackgroundColor({ color: '#FFFFFF00' });
         StatusBar.setOverlaysWebView({ overlay: false });
       } else if (Capacitor.getPlatform() === 'android') {
         StatusBar.setBackgroundColor({ color: '#000000' });

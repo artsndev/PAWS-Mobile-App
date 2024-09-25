@@ -34,7 +34,7 @@
   <v-navigation-drawer v-model="drawer" flat color="deep-purple-darken-1">
     <div class="text-center mt-3">
       <v-avatar size="70" class="mx-auto">
-        <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
+        <img :src="avatar" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
       </v-avatar>
       <v-list>
         <v-list-item :subtitle="email" :title="name"></v-list-item>
@@ -72,6 +72,7 @@ import axios from 'axios';
 import { reactive } from 'vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import avatar from '@/assets/images/avatar.png'
 
 const drawer = ref(false);
 const toggleMenu = () => {
@@ -81,7 +82,7 @@ const toggleMenu = () => {
 const navDrawitems = ref([
   { icon: 'mdi-chart-donut', text: 'Dashboard', routeName: 'Vet Dashboard' },
   { icon: 'mdi-clipboard-text-multiple-outline', text: 'Appointments', routeName: 'Vet Appointment'},
-  { icon: 'mdi-account-multiple-outline', text: 'Schedule', routeName: 'Vet Schedule'},
+  { icon: 'mdi-calendar-multiple', text: 'Schedule', routeName: 'Vet Schedule'},
   { icon: 'mdi-account-multiple-outline', text: 'Users', routeName: 'Vet User'},
   { icon: 'mdi-clipboard-check-multiple-outline', text: 'Queued', routeName: 'Vet Queue'},
 ]);
@@ -123,7 +124,7 @@ const logout = async () => {
             },
         });
         localStorage.removeItem('vetToken');
-        router.push({ name: 'Login' });
+        router.push({ name: 'Vet Login' });
     } catch (error) {
         console.error(error);
     }
@@ -131,10 +132,9 @@ const logout = async () => {
 
 const snackbar = ref(false)
 const text = ref('')
-
+const timer = ref(null)
 const schedule_time_error = ref('')
 
-const timer = ref(null)
 
 const form = reactive({
     schedule_time: ''

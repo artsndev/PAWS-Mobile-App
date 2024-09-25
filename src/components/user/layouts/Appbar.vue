@@ -5,15 +5,50 @@
     <template v-slot:prepend>
       <v-app-bar-nav-icon size="33" class="ms-2" @click="toggleMenu"></v-app-bar-nav-icon>
     </template>
-        <v-btn icon>
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+    <v-dialog max-width="600" persistent v-model="addPetdialog">
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-btn icon="mdi-plus" v-bind="activatorProps"></v-btn>
+        </template>
+
+        <template v-slot:default="{ isActive }">
+          <v-card>
+            <v-toolbar color="transparent">
+              <v-toolbar-title>Add Pet</v-toolbar-title>
+              <v-spacer></v-spacer>
+                <v-btn icon="mdi-close"  @click="isActive.value = false"></v-btn>
+            </v-toolbar>
+            <v-container>
+                <v-form @submit.prevent="addPet" class="mt-n2">
+                  <v-text-field v-model="form.name" :error-messages="name_error" label="Pet's Name" variant="outlined" density="compact" color="primary"></v-text-field>
+                  <v-row>
+                    <v-col cols="6">
+                      <v-text-field v-model="form.species" :error-messages="species_error" label="Pet's Species" variant="outlined" density="compact" color="primary"></v-text-field>
+                    </v-col>
+                    <v-col>
+                      <v-text-field v-model="form.breed" :error-messages="breed_error" label="Pet's Breed" variant="outlined" density="compact" color="primary"></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row class="mt-n5">
+                    <v-col cols="6">
+                      <v-select  v-model="form.sex" :error-messages="sex_error" :items="[ 'Male', 'Female']" label="Pet's Gender" variant="outlined" density="compact" color="primary"></v-select>
+                    </v-col>
+                    <v-col>
+                      <v-text-field v-model="form.age" :error-messages="age_error" label="Pet's Age" variant="outlined" density="compact" color="primary"></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-text-field v-model="form.color" :error-messages="color_error" label="Pet's Color" variant="outlined" density="compact" color="primary"></v-text-field>
+                  <v-btn type="submit" color="primary" class="text-capitalize mt-1">Submit</v-btn>
+                </v-form>
+            </v-container>
+        </v-card>
+        </template>
+      </v-dialog>
   </v-app-bar>
 
   <v-navigation-drawer v-model="drawer" flat color="deep-purple-darken-1">
     <div class="text-center mt-3">
       <v-avatar size="70" class="mx-auto">
-        <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
+        <img :src="avatar" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
       </v-avatar>
       <v-list>
         <v-list-item :subtitle="email" :title="name"></v-list-item>
@@ -45,19 +80,92 @@
 <script setup>
 import { BASE_URL } from '@/server';
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import avatar from '@/assets/images/avatar.png'
 
 const drawer = ref(false);
 const toggleMenu = () => {
   drawer.value = !drawer.value;
+}
+const addPetdialog = ref(false)
+
+const form = reactive({
+  name: '',
+  color: '',
+  species: '',
+  breed: '',
+  age: '',
+  sex: null,
+})
+
+const snackbar = ref(false)
+const text = ref('')
+const timer = ref(null)
+
+const name_error = ref('')
+const breed_error = ref('')
+const species_error = ref('')
+const age_error = ref('')
+const sex_error = ref('')
+const color_error = ref('')
+
+const addPet = async () => {
+    try {
+        const formData = new FormData();
+        formData.append('name', form.name);
+        formData.append('breed', form.breed);
+        formData.append('species', form.species);
+        formData.append('color', form.color);
+        formData.append('age', form.age);
+        formData.append('sex', form.sex);
+        const token = localStorage.getItem('userToken')
+        const response = await axios.post(BASE_URL + '/user/pet', formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+        })
+        const clearValidationError = () => {
+            name_error.value = ''
+            breed_error.value = ''
+            species_error.value = ''
+            age_error.value = ''
+            sex_error.value = ''
+            color_error.value = ''
+        }
+        const setValidationError = () => {
+            clearValidationError()
+            timer.value = setTimeout(() => {
+                name_error.value = response.data.errors.name
+                breed_error.value = response.data.errors.breed
+                species_error.value = response.data.errors.species
+                age_error.value = response.data.errors.age
+                sex_error.value = response.data.errors.sex
+                color_error.value = response.data.errors.color
+            }, 1)
+            setTimeout(() => {
+                clearValidationError();
+            }, 10000);
+        }
+        if (response.data.success) {
+            snackbar.value = true
+            text.value = "Submitted Successfully."
+            addPetdialog.value = false
+            // location.reload()
+            router.push('/pet')
+        } else {
+            setValidationError()
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 const navDrawitems = ref([
   { icon: 'mdi-chart-donut', text: 'Dashboard', routeName: 'Home' },
   { icon: 'mdi-paw-outline', text: 'Pet', routeName: 'Pet'},
   { icon: 'mdi-history', text: 'History', routeName: 'History'},
-  { icon: 'mdi-account-outline', text: 'Profile', routeName: 'Vet Queue'},
+  // { icon: 'mdi-account-outline', text: 'Profile', routeName: 'Vet Queue'},
 ]);
 
 const router = useRouter();
