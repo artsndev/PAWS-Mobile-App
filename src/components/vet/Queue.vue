@@ -84,17 +84,7 @@
               </v-dialog>
 
               <!-- Delete Dialog -->
-              <v-dialog v-model="item.viewDialog" max-width="500" persistent fullscreen>
-                <template v-slot:activator="{ props }">
-                  <v-btn density="comfortable" icon @click="(item)" variant="text" color="deep-purple-darken-1" v-bind="props">
-                    <v-icon>mdi-eye</v-icon>
-                  </v-btn>
-                </template>
-                <template v-slot:default="{ isActive }">
-
-                </template>
-              </v-dialog>
-              <v-dialog v-if="!item.deleted_at" v-model="item.openDialog" max-width="500" persistent>
+              <v-dialog v-if="!item.deleted_at" v-model="item.openDialog" max-width="400" persistent>
                 <template v-slot:activator="{ props }">
                   <v-btn density="comfortable" icon @click="openDialog(item)" variant="text" color="success" v-bind="props">
                     <v-icon>mdi-check</v-icon>
@@ -102,14 +92,12 @@
                 </template>
                 <template v-slot:default="{ isActive }">
                   <v-card>
-                    <v-card-text>
-                      Are you sure to accept this appointment?
-                    </v-card-text>
                     <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn density="comfortable" @click="markAsDone(item.id)" text="Accept Appointment" variant="text" color="success">
+                      <!-- <v-spacer></v-spacer> -->
+                      <v-btn density="comfortable" @click="markAsDone(item.id)" text="Complete Appointment" variant="text" color="success">
                       </v-btn>
                       <v-btn text="Close Dialog" @click="isActive.value = false"></v-btn>
+                      <!-- <v-spacer></v-spacer> -->
                     </v-card-actions>
                   </v-card>
                 </template>
@@ -230,7 +218,7 @@ const markAsDone = async (id) => {
         snackbar.value = true
         icon.value = 'mdi-check'
         color.value = 'success'
-        text.value = 'Queued Successfully'
+        text.value = 'Completed Successfully'
         fetchData()
     } catch (error) {
         console.log(error)

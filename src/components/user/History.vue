@@ -66,7 +66,7 @@
                         <v-textarea readonly v-model="item.purpose_of_appointment" density="compact" color="deep-purple-darken-3" variant="outlined" label="Purpose of Appointment" auto-grow rows="1"></v-textarea>
                       </v-form>
                       <v-divider class="mt-3 mb-3"></v-divider>
-                      <p>Treatment Details</p>
+                      <p>Pet Record</p>
                       <div v-for="(result, index) in item.result" :key="index">
                         <v-form class="mt-6">
                           <v-text-field readonly v-model="result.physical_exam" density="compact" variant="outlined" color="deep-purple-darken-3" label="Physical Examination"></v-text-field>

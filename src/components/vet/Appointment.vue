@@ -113,7 +113,7 @@
               <v-dialog v-else v-model="item.addDialog" max-width="500" persistent fullscreen>
                 <template v-slot:activator="{ props }">
                   <v-btn density="comfortable" icon @click="addItem(item)" variant="text" color="primary" v-bind="props">
-                    <v-icon>mdi-clipboard-text-multiple-outline</v-icon>
+                    <v-icon>mdi-clipboard-plus-outline</v-icon>
                   </v-btn>
                 </template>
                 <template v-slot:default="{ isActive }">
@@ -339,7 +339,7 @@ const markAsDone = async (item) => {
         snackbar.value = true
         icon.value = 'mdi-check'
         color.value = 'success'
-        text.value = "Request accepted and queued successfully."
+        text.value = "Request accepted successfully."
     } catch (error) {
         console.error('Error marking as done:', error);
     } finally {
