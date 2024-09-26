@@ -84,7 +84,7 @@ const navDrawitems = ref([
   { icon: 'mdi-clipboard-text-multiple-outline', text: 'Appointments', routeName: 'Vet Appointment'},
   { icon: 'mdi-calendar-multiple', text: 'Schedule', routeName: 'Vet Schedule'},
   { icon: 'mdi-account-multiple-outline', text: 'Users', routeName: 'Vet User'},
-  { icon: 'mdi-clipboard-check-multiple-outline', text: 'Queued', routeName: 'Vet Queue'},
+  { icon: 'mdi-clipboard-check-multiple-outline', text: 'Status', routeName: 'Vet Queue'},
 ]);
 
 const router = useRouter();
