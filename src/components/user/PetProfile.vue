@@ -34,6 +34,27 @@
     <v-footer class="position-bottom">
       <v-row no-gutters>
         <v-col cols="12" class="mb-3">
+          <v-dialog v-model="deletePet" transition="dialog-bottom-transition">
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-btn block v-bind="activatorProps" color="red-darken-4 sticky-bottom" variant="outlined" rounded="lg">Delete Pet</v-btn>
+        </template>
+        <template v-slot:default="{ isActive }">
+          <v-card>
+            <v-card-title class="d-flex justify-space-between align-center">
+              Delete Pet Profile
+              <v-btn icon="mdi-close" variant="text" @click="isActive.value = false"></v-btn>
+            </v-card-title>
+            <v-card-text>
+              Are you sure to remove this pet?
+            </v-card-text>
+            <v-card-actions>
+              <v-btn color="red-darken-4" variant="flat" :loading="isLoading" @click="deleteItem(petId)">Yes</v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
+        </v-col>
+        <v-col cols="12" class="mb-3">
           <v-dialog v-model="editPet" transition="dialog-bottom-transition" fullscreen>
         <template v-slot:activator="{ props: activatorProps }">
           <v-btn block v-bind="activatorProps" color="blue-darken-4 sticky-bottom" variant="outlined" rounded="lg">Edit Pet Profile</v-btn>
@@ -249,6 +270,31 @@ const createAppointment = async () => {
   }
 }
 
+const deletePet = ref(false)
+const isLoading = ref(false)
+
+const deleteItem = async (petId) => {
+    try {
+        isLoading.value = true;
+        const token = localStorage.getItem('userToken');
+        const response = await axios.delete(BASE_URL + '/user/pet/' + petId, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        snackbar.value = true
+        color.value = 'success'
+        text.value = 'Deleted Successfully'
+        setTimeout(() => {
+          router.push('/pet')
+        }, 3000);
+    } catch (error) {
+        console.error('Error deleting user:', error);
+    } finally {
+        isLoading.value = false;
+    }
+};
+
 const text = ref('')
 const name_error = ref('')
 const breed_error = ref('')
@@ -277,7 +323,7 @@ const editPetProfile = async (petId) => {
         formData.append('age', editForm.age);
         formData.append('sex', editForm.sex);
     const token = localStorage.getItem('userToken');
-    const response = await axios.put(BASE_URL + '/user/pet/' + petId, formData, {
+    const response = await axios.post(BASE_URL + '/user/pet/' + petId, formData, {
       headers: {
         Authorization: `Bearer ${token}`
       }
