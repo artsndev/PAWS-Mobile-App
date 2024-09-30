@@ -32,7 +32,35 @@
   <!-- <v-divider></v-divider> -->
 
     <v-footer class="position-bottom">
-      <v-dialog v-model="addAppointment" transition="dialog-bottom-transition" fullscreen>
+      <v-row no-gutters>
+        <v-col cols="12" class="mb-3">
+          <v-dialog v-model="editPet" transition="dialog-bottom-transition" fullscreen>
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-btn block v-bind="activatorProps" color="blue-darken-4 sticky-bottom" variant="outlined" rounded="lg">Edit Pet Profile</v-btn>
+        </template>
+        <template v-slot:default="{ isActive }">
+          <v-card>
+            <v-card-title class="d-flex justify-space-between align-center">
+              Edit Pet Profile
+              <v-btn icon="mdi-close" variant="text" @click="isActive.value = false"></v-btn>
+            </v-card-title>
+            <v-card-text>
+              <v-form @submit.prevent="editPetProfile(petId)">
+                <v-text-field v-model="editForm.name" :error-messages="name_error" label="Pet's Name" variant="outlined" density="compact" color="primary"></v-text-field>
+                      <v-text-field v-model="editForm.species" :error-messages="species_error" label="Pet's Species" variant="outlined" density="compact" color="primary"></v-text-field>
+                      <v-text-field v-model="editForm.breed" :error-messages="breed_error" label="Pet's Breed" variant="outlined" density="compact" color="primary"></v-text-field>
+                      <v-select  v-model="editForm.sex" :error-messages="sex_error" :items="[ 'Male', 'Female']" label="Pet's Gender" variant="outlined" density="compact" color="primary"></v-select>
+                      <v-text-field v-model="editForm.age" :error-messages="age_error" label="Pet's Age" variant="outlined" density="compact" color="primary"></v-text-field>
+                  <v-text-field v-model="editForm.color" :error-messages="color_error" label="Pet's Color" variant="outlined" density="compact" color="primary"></v-text-field>
+                  <v-btn color="primary" block type="submit" class="text-decoration-none">Update Profile</v-btn>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </template>
+      </v-dialog>
+        </v-col>
+        <v-col cols="12">
+          <v-dialog v-model="addAppointment" transition="dialog-bottom-transition" fullscreen>
         <template v-slot:activator="{ props: activatorProps }">
           <v-btn block v-bind="activatorProps" color="blue-darken-4 sticky-bottom" rounded="lg">Request For Appointment</v-btn>
         </template>
@@ -53,6 +81,10 @@
           </v-card>
         </template>
       </v-dialog>
+        </v-col>
+      </v-row>
+
+
     </v-footer>
     <v-snackbar :timeout="2000" v-model="snackbar" color="success">
       <v-icon icon="mdi-check" class="px-2"></v-icon>
@@ -213,6 +245,75 @@ const createAppointment = async () => {
       }
     }
   } catch (error) {
+    console.log(error)
+  }
+}
+
+const text = ref('')
+const name_error = ref('')
+const breed_error = ref('')
+const species_error = ref('')
+const age_error = ref('')
+const sex_error = ref('')
+const color_error = ref('')
+const editPet = ref(false)
+
+const editForm = reactive({
+  name: name,
+  color: color,
+  species: species,
+  breed: breed,
+  age: age,
+  sex: sex,
+})
+
+const editPetProfile = async (petId) => {
+  try {
+    const formData = new FormData();
+        formData.append('name', editForm.name);
+        formData.append('breed', editForm.breed);
+        formData.append('species', editForm.species);
+        formData.append('color', editForm.color);
+        formData.append('age', editForm.age);
+        formData.append('sex', editForm.sex);
+    const token = localStorage.getItem('userToken');
+    const response = await axios.put(BASE_URL + '/user/pet/' + petId, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    const clearValidationError = () => {
+            name_error.value = ''
+            breed_error.value = ''
+            species_error.value = ''
+            age_error.value = ''
+            sex_error.value = ''
+            color_error.value = ''
+        }
+        const setValidationError = () => {
+            clearValidationError()
+            timer.value = setTimeout(() => {
+                name_error.value = response.data.error.name
+                breed_error.value = response.data.error.breed
+                species_error.value = response.data.error.species
+                age_error.value = response.data.error.age
+                sex_error.value = response.data.error.sex
+                color_error.value = response.data.error.color
+            }, 1)
+            setTimeout(() => {
+                clearValidationError();
+            }, 10000);
+        }
+        if (response.data.success) {
+            snackbar.value = true
+            text.value = "Updated Successfully."
+            editPet.value = false
+            // location.reload()
+            loadUser()
+        } else {
+            setValidationError()
+        }
+  }  catch (error) {
     console.log(error)
   }
 }
