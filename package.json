@@ -26,6 +26,7 @@
     "dayjs": "^1.11.13",
     "roboto-fontface": "*",
     "vue": "^3.4.31",
+    "vue-filepond": "^7.0.4",
     "vuetify": "^3.6.11"
   },
   "devDependencies": {
