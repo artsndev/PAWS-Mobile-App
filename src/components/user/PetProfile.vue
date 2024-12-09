@@ -120,7 +120,7 @@ import axios from 'axios';
 import { BASE_URL } from '@/server';
 import { useRouter, useRoute } from 'vue-router';
 import dayjs from 'dayjs';
-import petImage from '@/assets/images/dog.jpg'
+// import petImage from '@/assets/images/dog.jpg'
 
 
 const snackbar = ref(false)

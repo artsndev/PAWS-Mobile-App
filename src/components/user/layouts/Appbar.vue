@@ -19,8 +19,27 @@
             </v-toolbar>
             <v-container>
                 <v-form @submit.prevent="addPet" class="mt-n2">
-                  <file-pond v-model="form.avatar" class="mb-8" ref="pond" @change="onChange" label-idle="Add your pet avatar here..." v-bind:allow-multiple="false" accepted-file-types="image/jpeg, image/png" server="/api/admin/upload" v-bind:files="myFiles" v-on:init="handleFilePondInit"/>
-
+                  <file-pond
+  v-model="form.avatar"
+  class="mb-8"
+  ref="pond"
+  @change="onChange"
+  label-idle="Add your pet avatar here..."
+  :allow-multiple="false"
+  :accepted-file-types="['image/jpeg', 'image/png']"
+  :server="{
+    url: BASE_URL + '/user/upload',
+    process: {
+      url: '/',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`, // Use reactive token value
+      },
+    },
+  }"
+  :files="myFiles"
+  @init="handleFilePondInit"
+/>
                   <v-text-field v-model="form.name" :error-messages="name_error" label="Pet's Name" variant="outlined" density="compact" color="primary"></v-text-field>
                   <v-row>
                     <v-col cols="6">
@@ -97,6 +116,9 @@ const FilePond = vueFilePond(
     FilePondPluginImagePreview
 );
 
+const token = ref(localStorage.getItem('userToken') || '');
+
+
 const drawer = ref(false);
 const toggleMenu = () => {
   drawer.value = !drawer.value;
@@ -104,6 +126,7 @@ const toggleMenu = () => {
 const addPetdialog = ref(false)
 
 const form = reactive({
+  avatar: null,
   name: '',
   color: '',
   species: '',
@@ -112,6 +135,10 @@ const form = reactive({
   sex: null,
 })
 
+const onChange = async (e) => {
+    console.log("Pet Avatar : ", e.target.files[0]);
+    form.avatar = e.target.files[0];
+}
 const snackbar = ref(false)
 const text = ref('')
 const timer = ref(null)
@@ -126,6 +153,7 @@ const color_error = ref('')
 const addPet = async () => {
     try {
         const formData = new FormData();
+        formData.append('avatar', form.avatar);
         formData.append('name', form.name);
         formData.append('breed', form.breed);
         formData.append('species', form.species);
