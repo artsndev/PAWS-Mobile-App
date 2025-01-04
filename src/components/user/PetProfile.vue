@@ -3,8 +3,8 @@
   <AppBar/>
   <v-container>
     <div class="text-center">
-      <v-avatar size="100" class="mx-auto">
-        <img :src="petImage" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
+      <v-avatar size="80" class="mx-auto mb-3">
+        <v-img :src="avatar" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;"></v-img>
       </v-avatar>
       <h2 class="mx-auto font-weight-regular mt-3">{{ name }}</h2>
       <p class="mx-auto text-grey font-weight-regular">{{ age }}</p>
@@ -130,6 +130,7 @@ const color = ref('')
 const species = ref('')
 const sex = ref('')
 const age = ref('')
+const avatar = ref('')
 
 const petId = ref(null)
 
@@ -148,6 +149,7 @@ const loadUser = async () => {
       }
     })
     const pet = response.data.data
+    avatar.value = pet.avatar
     name.value = pet.name
     breed.value = pet.breed
     color.value = pet.color
