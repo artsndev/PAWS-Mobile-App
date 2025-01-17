@@ -1,16 +1,11 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <Appbar/>
-  <v-breadcrumbs :items="breadCrumbsItems">
-    <template v-slot:divider>
-      <v-icon icon="mdi-chevron-right"></v-icon>
-    </template>
-  </v-breadcrumbs>
   <v-row no-gutters>
     <v-col cols="12">
       <v-card-title>History of Appointments</v-card-title>
       <v-card-text>
-        <v-data-table :headers="headers" loading-text="Loading... Please wait" :items="filteredData" :items-per-page="pagination.rowsPerPage" v-model:page="pagination.page" :server-items-length="totalResults" class="elevation-0" :loading="isLoading">
+        <v-data-table  :headers="headers" loading-text="Loading... Please wait" :items="filteredData" :items-per-page="pagination.rowsPerPage" v-model:page="pagination.page" :server-items-length="totalResults" class="elevation-0" :loading="isLoading">
           <template v-slot:top>
             <v-toolbar flat color="transparent">
               <v-text-field rounded color="primary" variant="outlined" v-model="searchQuery"  density="compact" label="Search by Name or Email" single-line hide-details/>

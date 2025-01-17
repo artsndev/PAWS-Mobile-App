@@ -2,6 +2,9 @@
 <template>
   <Appbar/>
   <v-container>
+    <v-img src="@/assets/images/bg.png" class="mx-n2"></v-img>
+    <v-btn icon="mdi-medical-bag" color="red"></v-btn>
+
     <h2>Hello, {{ name }}</h2>
     <h5>Welcome to PAWSSIBLE Solutions Mobile App.</h5>
     <v-row class="mt-5">
