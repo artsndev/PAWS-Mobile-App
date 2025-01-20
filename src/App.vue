@@ -43,7 +43,7 @@ onUnmounted(() => {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
 * {
   font-family: 'Poppins', sans-serif;
-  background-color: #F8BBD0;
+  /* background-color: #F8BBD0; */
 }
 
 .scrollable-section {
