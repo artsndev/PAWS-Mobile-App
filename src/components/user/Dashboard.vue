@@ -3,14 +3,15 @@
   <Appbar/>
   <v-container>
     <v-img src="@/assets/images/bg.png" class="mx-n2"></v-img>
-    <v-btn icon="mdi-medical-bag" color="red"></v-btn>
+    <h4>Services</h4>
+      <v-btn v-for="(item, index) in buttonTitles"   :icon="item.icon" :color="item.color" class="mx-1 mb-3" rounded="lg" size="75"></v-btn>
 
     <h2>Hello, {{ name }}</h2>
     <h5>Welcome to PAWSSIBLE Solutions Mobile App.</h5>
     <v-row class="mt-5">
           <v-col cols="6" v-for="(item, index) in data" :key="index">
-              <v-card rounded="xl" class="mt-n3 mb-1" elevation="3" :to="'/pet/profile/' + item.id">
-                  <v-row class="mx-1 mt-1">
+              <v-card rounded="xl" class="mt-n3 mb-1 text-center" elevation="3" :to="'/pet/profile/' + item.id">
+                  <v-row class="mx-1 mt-1 text-center">
                       <v-col cols="8">
                         <v-avatar size="80" class="mx-auto mb-3">
                           <v-img :src="item.avatar" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;"></v-img>
@@ -48,6 +49,14 @@ import { onMounted, ref } from 'vue';
 import petImage from '@/assets/images/dog.jpg'
 
 const router = useRouter()
+
+const buttonTitles = ref([
+  { icon: 'mdi-medical-bag', color: 'red' },
+  { icon:'mdi-needle', color: 'info' },
+  { icon:'mdi-medication', color: 'secondary' },
+  { icon:'mdi-bandage', color: 'brown' },
+  { icon:'mdi-store', color: 'pink' },
+])
 
 const name = ref('')
 const email = ref('')
