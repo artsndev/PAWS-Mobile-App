@@ -53,12 +53,11 @@
         <v-divider class="mt-5"></v-divider>
         <v-list-item prepend-icon="mdi-location-exit" title="Sign out" value="logout" class="ms-1 mt-1 fs-5" @click="logout"></v-list-item>
     </v-list>
-    <template v-slot:append>
+    <!-- <template v-slot:append>
       <div class="text-center mb-2">
-        <!-- <p class="text-grey fs-14">@QuirkyQuarks Squadrons</p> -->
         <p class="text-grey mb-2 fs-14">© 2024 All rights reserved.</p>
       </div>
-    </template>
+    </template> -->
   </v-navigation-drawer>
     <v-snackbar :timeout="2000" v-model="snackbar" color="success">
       <v-icon icon="mdi-check" class="px-2"></v-icon>

@@ -1,11 +1,11 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <Appbar/>
-  <v-breadcrumbs :items="breadCrumbsItems">
+  <!-- <v-breadcrumbs :items="breadCrumbsItems">
     <template v-slot:divider>
       <v-icon icon="mdi-chevron-right"></v-icon>
     </template>
-  </v-breadcrumbs>
+  </v-breadcrumbs> -->
   <v-row no-gutters>
     <v-col cols="12">
       <v-card-title>List of Appointments</v-card-title>
