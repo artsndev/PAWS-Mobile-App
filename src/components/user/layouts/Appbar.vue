@@ -19,6 +19,27 @@
             </v-toolbar>
             <v-container>
                 <v-form @submit.prevent="addPet" class="mt-n2">
+                  <file-pond
+  v-model="form.avatar"
+  class="mb-8"
+  ref="pond"
+  @change="onChange"
+  label-idle="Add your pet avatar here..."
+  :allow-multiple="false"
+  :accepted-file-types="['image/jpeg', 'image/png']"
+  :server="{
+    url: BASE_URL + '/user/upload',
+    process: {
+      url: '/',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`, // Use reactive token value
+      },
+    },
+  }"
+  :files="myFiles"
+  @init="handleFilePondInit"
+/>
                   <v-text-field v-model="form.name" :error-messages="name_error" label="Pet's Name" variant="outlined" density="compact" color="primary"></v-text-field>
                   <v-row>
                     <v-col cols="6">
@@ -67,12 +88,11 @@
         <v-divider class="mt-5"></v-divider>
         <v-list-item prepend-icon="mdi-location-exit" title="Sign out" value="logout" class="ms-1 mt-1 fs-5" @click="logout"></v-list-item>
     </v-list>
-    <template v-slot:append>
+    <!-- <template v-slot:append>
       <div class="text-center mb-2">
-        <!-- <p class="text-grey fs-14">@QuirkyQuarks Squadrons</p> -->
         <p class="text-grey mb-2 fs-14">© 2024 All rights reserved.</p>
       </div>
-    </template>
+    </template> -->
   </v-navigation-drawer>
 
 </template>
@@ -83,6 +103,20 @@ import axios from 'axios';
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import avatar from '@/assets/images/avatar.png'
+import vueFilePond from "vue-filepond";
+import "filepond/dist/filepond.min.css";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+
+// Create component
+const FilePond = vueFilePond(
+    FilePondPluginFileValidateType,
+    FilePondPluginImagePreview
+);
+
+const token = ref(localStorage.getItem('userToken') || '');
+
 
 const drawer = ref(false);
 const toggleMenu = () => {
@@ -91,6 +125,7 @@ const toggleMenu = () => {
 const addPetdialog = ref(false)
 
 const form = reactive({
+  avatar: null,
   name: '',
   color: '',
   species: '',
@@ -99,6 +134,10 @@ const form = reactive({
   sex: null,
 })
 
+const onChange = async (e) => {
+    console.log("Pet Avatar : ", e.target.files[0]);
+    form.avatar = e.target.files[0];
+}
 const snackbar = ref(false)
 const text = ref('')
 const timer = ref(null)
@@ -113,6 +152,7 @@ const color_error = ref('')
 const addPet = async () => {
     try {
         const formData = new FormData();
+        formData.append('avatar', form.avatar);
         formData.append('name', form.name);
         formData.append('breed', form.breed);
         formData.append('species', form.species);
@@ -188,7 +228,7 @@ const loadUser = async () => {
       localStorage.removeItem('userToken');
       setTimeout(() => {
         location.reload()
-        router.push({
+        route.push({
           name: 'Login'
         })
       }, 3000)

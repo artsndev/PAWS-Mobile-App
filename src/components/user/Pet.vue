@@ -8,9 +8,9 @@
               <v-card rounded="xl" class="mt-n3 mb-1 text-center" elevation="3" :to="'/pet/profile/' + item.id">
                   <v-row class="mx-1 mt-1">
                       <v-col cols="12">
-                        <v-avatar size="50" class="mx-auto mb-3">
-                          <img :src="petImage" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;">
-                        </v-avatar>
+                        <v-avatar size="80" class="mx-auto mb-3">
+                                        <v-img :src="item.avatar" alt="Avatar" style="object-fit: cover; width: 100%; height: 100%;"></v-img>
+                                    </v-avatar>
                       </v-col>
                       <!-- <v-col cols="2" class="mt-n1 text-end">
                           <v-btn icon="mdi-trash-can-outline" density="comfortable" variant="flat" @click="deleteItem(item.id)"></v-btn>

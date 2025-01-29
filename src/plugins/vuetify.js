@@ -13,6 +13,7 @@ import * as components from 'vuetify/components';
 
 // Labs
 import { VDateInput } from 'vuetify/labs/VDateInput';
+import { VPullToRefresh } from 'vuetify/labs/VPullToRefresh'
 
 // Composables
 import { createVuetify } from 'vuetify'
@@ -28,7 +29,8 @@ const customTheme = {
 export default createVuetify({
   components: {
     ...components,
-    VDateInput
+    VDateInput,
+    VPullToRefresh,
   },
   theme: {
     defaultTheme: 'customTheme',

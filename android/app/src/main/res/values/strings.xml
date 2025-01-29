@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">paws-mobile-app</string>
-    <string name="title_activity_main">paws-mobile-app</string>
+    <string name="app_name">PSVC Mobile App</string>
+    <string name="title_activity_main">PSVC Mobile App</string>
     <string name="package_name">paws.mobile.app</string>
     <string name="custom_url_scheme">paws.mobile.app</string>
 </resources>

@@ -1,11 +1,11 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <Appbar/>
-  <v-breadcrumbs :items="breadCrumbsItems">
+  <!-- <v-breadcrumbs :items="breadCrumbsItems">
     <template v-slot:divider>
       <v-icon icon="mdi-chevron-right"></v-icon>
     </template>
-  </v-breadcrumbs>
+  </v-breadcrumbs> -->
   <v-row no-gutters>
     <v-col cols="12">
       <v-card-title>List of Appointments</v-card-title>
@@ -100,7 +100,7 @@
                       <v-spacer></v-spacer>
                       <v-btn density="comfortable" @click="markAsDone(item)" text="Accept Appointment" variant="text" color="success">
                       </v-btn>
-                      <v-btn text="Close Dialog" @click="isActive.value = false"></v-btn>
+                      <v-btn text="Close" @click="isActive.value = false"></v-btn>
                     </v-card-actions>
                   </v-card>
                 </template>
@@ -213,33 +213,48 @@ const form = reactive({
 })
 const timer = ref(null)
 
-
 const downloadPdf = async (id) => {
   try {
-    const token = localStorage.getItem('vetToken')
-    const response = await axios.get(BASE_URL +'/download/'+id, {
+    const token = localStorage.getItem('vetToken');
+    const response = await axios.get(`${BASE_URL}/download/${id}`, {
       headers: {
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
       },
-      responseType: 'blob' // Add this line
-    })
-    const blob = new Blob([response.data], { type: 'application/pdf' });
-    const fileName = `report-${id}.pdf`;
-
-    // Use the @capacitor/filesystem plugin to save the file to the device
-    const fileOptions = {
-      path: `${FilesystemDirectory.Documents}/${fileName}`,
-      data: blob,
-    };
-    Filesystem.writeFile(fileOptions).then((result) => {
-      console.log(`File downloaded to: ${result.uri}`);
-    }).catch((error) => {
-      console.error(`Error downloading file: ${error}`);
+      responseType: 'blob', // Ensures the response is in binary format
     });
+
+    // Create a Blob from the response data
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+
+    // Convert Blob to Base64 (Filesystem plugin requires Base64 for saving files)
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64Data = reader.result.split(',')[1]; // Extract the Base64 string
+
+      // Save the file to the device using Capacitor's Filesystem plugin
+      try {
+        const fileName = `report-${id}.pdf`;
+        const result = await Filesystem.writeFile({
+          path: fileName,
+          directory: FilesystemDirectory.Documents,
+          data: base64Data,
+        });
+
+        console.log(`File downloaded and saved to: ${result.uri}`);
+      } catch (filesystemError) {
+        console.error(`Error saving file to filesystem: ${filesystemError}`);
+      }
+    };
+
+    reader.onerror = (readerError) => {
+      console.error('Error converting Blob to Base64:', readerError);
+    };
+
+    reader.readAsDataURL(blob); // Convert Blob to Base64
   } catch (error) {
-    console.log(error)
+    console.error('Error downloading PDF:', error);
   }
-}
+};
 const physical_exam_error = ref('')
 const treatment_plan_error = ref('')
 
